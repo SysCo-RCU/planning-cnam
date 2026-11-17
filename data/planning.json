@@ -1,7 +1,7 @@
 {
   "source": "Cnam Grand Est",
-  "updatedAt": "2026-11-17T13:49:34.314Z",
-  "lastChangeAt": null,
+  "updatedAt": "2026-11-17T22:57:33.964Z",
+  "lastChangeAt": "2026-11-17T22:57:33.964Z",
   "windowStart": "2026-11-16",
   "windowEnd": "2027-04-04",
   "events": [
@@ -468,7 +468,7 @@
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
       "session": 1,
-      "sessions": 34,
+      "sessions": 38,
       "notes": "Thématique : Mobilité internationale"
     },
     {
@@ -487,7 +487,7 @@
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
       "session": 1,
-      "sessions": 34,
+      "sessions": 38,
       "notes": "Thématique : Mobilité internationale"
     },
     {
@@ -506,7 +506,7 @@
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
       "session": 3,
-      "sessions": 34,
+      "sessions": 38,
       "notes": "Thématique : Mobilité internationale"
     },
     {
@@ -525,7 +525,7 @@
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
       "session": 3,
-      "sessions": 34,
+      "sessions": 38,
       "notes": "Thématique : Mobilité internationale"
     },
     {
@@ -543,7 +543,7 @@
       "category": "Cours Transition",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "session": 5,
-      "sessions": 34,
+      "sessions": 38,
       "notes": "Thématique : Lancement Sérious game"
     },
     {
@@ -561,7 +561,79 @@
       "category": "Cours Transition",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "session": 6,
-      "sessions": 34,
+      "sessions": 38,
+      "notes": "Thématique : Lancement Sérious game"
+    },
+    {
+      "id": "2026-12-10T09:00|USR24K|Entreprenariat Intrapreneuriat",
+      "date": "2026-12-10",
+      "start": "09:00",
+      "end": "12:30",
+      "code": "USR24K",
+      "title": "Entreprenariat Intrapreneuriat",
+      "type": "Cnamathon",
+      "exam": false,
+      "room": "Sera affichée",
+      "teacher": "Mme HANNA Marie",
+      "centre": "Centre de Nancy",
+      "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
+      "ue": "Transitions S7",
+      "session": 7,
+      "sessions": 38,
+      "notes": "Thématique : Lancement Sérious game"
+    },
+    {
+      "id": "2026-12-10T13:30|USR24K|Entreprenariat Intrapreneuriat",
+      "date": "2026-12-10",
+      "start": "13:30",
+      "end": "17:00",
+      "code": "USR24K",
+      "title": "Entreprenariat Intrapreneuriat",
+      "type": "Cnamathon",
+      "exam": false,
+      "room": "Sera affichée",
+      "teacher": "Mme HANNA Marie",
+      "centre": "Centre de Nancy",
+      "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
+      "ue": "Transitions S7",
+      "session": 8,
+      "sessions": 38,
+      "notes": "Thématique : Lancement Sérious game"
+    },
+    {
+      "id": "2026-12-11T09:00|USR24K|Entreprenariat Intrapreneuriat",
+      "date": "2026-12-11",
+      "start": "09:00",
+      "end": "12:30",
+      "code": "USR24K",
+      "title": "Entreprenariat Intrapreneuriat",
+      "type": "Cnamathon",
+      "exam": false,
+      "room": "Sera affichée",
+      "teacher": "Mme HANNA Marie",
+      "centre": "Centre de Nancy",
+      "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
+      "ue": "Transitions S7",
+      "session": 9,
+      "sessions": 38,
+      "notes": "Thématique : Lancement Sérious game"
+    },
+    {
+      "id": "2026-12-11T13:30|USR24K|Entreprenariat Intrapreneuriat",
+      "date": "2026-12-11",
+      "start": "13:30",
+      "end": "17:00",
+      "code": "USR24K",
+      "title": "Entreprenariat Intrapreneuriat",
+      "type": "Cnamathon",
+      "exam": false,
+      "room": "Sera affichée",
+      "teacher": "Mme HANNA Marie",
+      "centre": "Centre de Nancy",
+      "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
+      "ue": "Transitions S7",
+      "session": 10,
+      "sessions": 38,
       "notes": "Thématique : Lancement Sérious game"
     },
     {
@@ -711,8 +783,8 @@
       "category": "Transitions",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
-      "session": 7,
-      "sessions": 34,
+      "session": 11,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -730,8 +802,8 @@
       "category": "Transitions",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
-      "session": 7,
-      "sessions": 34,
+      "session": 11,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -749,8 +821,8 @@
       "category": "Cours Transition",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
-      "session": 7,
-      "sessions": 34,
+      "session": 11,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -768,8 +840,8 @@
       "category": "Transitions",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
-      "session": 10,
-      "sessions": 34,
+      "session": 14,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -787,8 +859,8 @@
       "category": "Transitions",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
-      "session": 10,
-      "sessions": 34,
+      "session": 14,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -806,8 +878,8 @@
       "category": "Cours Transition",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
-      "session": 10,
-      "sessions": 34,
+      "session": 14,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -899,8 +971,8 @@
       "centre": "Centre de Nancy",
       "category": "Transitions",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
-      "session": 13,
-      "sessions": 34,
+      "session": 17,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -917,8 +989,8 @@
       "centre": "Centre de Nancy",
       "category": "Transitions",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
-      "session": 13,
-      "sessions": 34,
+      "session": 17,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -935,8 +1007,8 @@
       "centre": "Centre de Nancy",
       "category": "Transitions",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
-      "session": 13,
-      "sessions": 34,
+      "session": 17,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -953,8 +1025,8 @@
       "centre": "Centre de Nancy",
       "category": "Transitions",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
-      "session": 16,
-      "sessions": 34,
+      "session": 20,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -971,8 +1043,8 @@
       "centre": "Centre de Nancy",
       "category": "Transitions",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
-      "session": 16,
-      "sessions": 34,
+      "session": 20,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -989,8 +1061,8 @@
       "centre": "Centre de Nancy",
       "category": "Transitions",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
-      "session": 16,
-      "sessions": 34,
+      "session": 20,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -1007,8 +1079,8 @@
       "centre": "Centre de Nancy",
       "category": "Transitions",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
-      "session": 19,
-      "sessions": 34,
+      "session": 23,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -1025,8 +1097,8 @@
       "centre": "Centre de Nancy",
       "category": "Transitions",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
-      "session": 19,
-      "sessions": 34,
+      "session": 23,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -1043,8 +1115,8 @@
       "centre": "Centre de Nancy",
       "category": "Transitions",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
-      "session": 21,
-      "sessions": 34,
+      "session": 25,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -1061,8 +1133,8 @@
       "centre": "Centre de Nancy",
       "category": "Transitions",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
-      "session": 21,
-      "sessions": 34,
+      "session": 25,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -1079,8 +1151,8 @@
       "centre": "Centre de Nancy",
       "category": "Transitions",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
-      "session": 23,
-      "sessions": 34,
+      "session": 27,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -1097,8 +1169,8 @@
       "centre": "Centre de Nancy",
       "category": "Transitions",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
-      "session": 23,
-      "sessions": 34,
+      "session": 27,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -1115,8 +1187,8 @@
       "centre": "Centre de Nancy",
       "category": "Transitions",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
-      "session": 23,
-      "sessions": 34,
+      "session": 27,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -1134,8 +1206,8 @@
       "category": "Cours Transition",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
-      "session": 26,
-      "sessions": 34,
+      "session": 30,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -1153,8 +1225,8 @@
       "category": "Cours Transition",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
-      "session": 26,
-      "sessions": 34,
+      "session": 30,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -1172,8 +1244,8 @@
       "category": "Cours Transition",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
-      "session": 26,
-      "sessions": 34,
+      "session": 30,
+      "sessions": 38,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -1209,8 +1281,8 @@
       "category": "Transitions",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
-      "session": 29,
-      "sessions": 34,
+      "session": 33,
+      "sessions": 38,
       "notes": "Thématique : Bilan S1"
     },
     {
@@ -1228,8 +1300,8 @@
       "category": "Transitions",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
-      "session": 29,
-      "sessions": 34,
+      "session": 33,
+      "sessions": 38,
       "notes": "Thématique : Bilan S1"
     },
     {
@@ -1247,8 +1319,8 @@
       "category": "TD",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
-      "session": 29,
-      "sessions": 34,
+      "session": 33,
+      "sessions": 38,
       "notes": "Thématique : Bilan S1"
     },
     {
@@ -1266,8 +1338,8 @@
       "category": "Transitions",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
-      "session": 32,
-      "sessions": 34,
+      "session": 36,
+      "sessions": 38,
       "notes": "Thématique : Bilan S1"
     },
     {
@@ -1285,8 +1357,8 @@
       "category": "Transitions",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
-      "session": 32,
-      "sessions": 34,
+      "session": 36,
+      "sessions": 38,
       "notes": "Thématique : Bilan S1"
     },
     {
@@ -1304,8 +1376,8 @@
       "category": "TD",
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
-      "session": 32,
-      "sessions": 34,
+      "session": 36,
+      "sessions": 38,
       "notes": "Thématique : Bilan S1"
     },
     {
