@@ -1,0 +1,68 @@
+name: Vérification du planning Cnam
+
+on:
+  schedule:
+    # Toutes les 2 h de 6 h à 22 h (heure de Paris en hiver ; les heures cron sont en UTC)
+    - cron: '17 5-21/2 * * *'
+  workflow_dispatch:
+    inputs:
+      test_email:
+        description: 'Envoyer aussi un e-mail de test'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: planning
+  cancel-in-progress: false
+
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Installer les dépendances
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: Lire le planning et comparer
+        env:
+          PLANNING_URL: ${{ secrets.PLANNING_URL }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
+          WEEKS_AHEAD: '20'
+          TEST_EMAIL: ${{ inputs.test_email }}
+          PAGE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+        run: node scraper/scrape.mjs
+
+      - name: Enregistrer les nouvelles données
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A data
+          if [ -f planning.ics ]; then git add planning.ics; fi
+          if git diff --cached --quiet; then
+            echo "Rien à enregistrer."
+          else
+            git commit -m "📅 Mise à jour du planning"
+            git pull --rebase
+            git push
+          fi
+
+      - name: Garder les captures en cas d'erreur
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug
+          path: debug/
+          if-no-files-found: ignore
