@@ -1,7 +1,7 @@
 {
   "source": "Cnam Grand Est",
-  "updatedAt": "2026-11-20T14:00:59.592Z",
-  "lastChangeAt": "2026-11-20T14:00:59.592Z",
+  "updatedAt": "2026-11-20T22:16:03.502Z",
+  "lastChangeAt": "2026-11-20T22:16:03.502Z",
   "windowStart": "2026-11-16",
   "windowEnd": "2027-04-04",
   "events": [
@@ -21,7 +21,7 @@
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
       "session": 14,
-      "sessions": 20
+      "sessions": 21
     },
     {
       "id": "2026-11-16T13:30|USEG06|Modélisation numérique",
@@ -39,7 +39,7 @@
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
       "session": 15,
-      "sessions": 20
+      "sessions": 21
     },
     {
       "id": "2026-11-17T09:00|USEG07|ACV",
@@ -166,7 +166,7 @@
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
       "session": 16,
-      "sessions": 20,
+      "sessions": 21,
       "notes": "Thématique : Mobilité internationale"
     },
     {
@@ -185,7 +185,7 @@
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
       "session": 17,
-      "sessions": 20,
+      "sessions": 21,
       "notes": "Thématique : Mobilité internationale"
     },
     {
@@ -204,7 +204,7 @@
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
       "session": 18,
-      "sessions": 20,
+      "sessions": 21,
       "notes": "Thématique : Mobilité internationale"
     },
     {
@@ -261,7 +261,27 @@
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
       "session": 14,
-      "sessions": 29
+      "sessions": 29,
+      "notes": "Thématique : Mobilité internationale"
+    },
+    {
+      "id": "2026-11-25T09:00|USEG06|Energie électrique",
+      "date": "2026-11-25",
+      "start": "09:00",
+      "end": "12:30",
+      "code": "USEG06",
+      "title": "Energie électrique",
+      "type": "Cours",
+      "exam": false,
+      "room": "Salle 106",
+      "teacher": "M REBAA El-Hadi",
+      "centre": "Centre de Nancy",
+      "category": "Cours",
+      "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
+      "ue": "Sciences S7",
+      "session": 19,
+      "sessions": 21,
+      "notes": "Thématique : Mobilité internationale"
     },
     {
       "id": "2026-11-25T13:30|USEG07|Turbomachines",
@@ -279,7 +299,8 @@
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
       "session": 15,
-      "sessions": 29
+      "sessions": 29,
+      "notes": "Thématique : Mobilité internationale"
     },
     {
       "id": "2026-11-26T09:00|USEG07|ACV",
@@ -298,7 +319,7 @@
       "ue": "Sciences et techniques de l'ingénieur S7",
       "session": 16,
       "sessions": 29,
-      "notes": "Composition en présentiel"
+      "notes": "Composition en présentiel · Thématique : Mobilité internationale"
     },
     {
       "id": "2026-11-26T13:30|USEG0A|",
@@ -315,7 +336,8 @@
       "category": "Cours mutualisé",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "session": 15,
-      "sessions": 74
+      "sessions": 74,
+      "notes": "Thématique : Mobilité internationale"
     },
     {
       "id": "2026-11-27T13:30|USEG06|Modélisation numérique",
@@ -332,9 +354,9 @@
       "category": "Contrôle continu",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
-      "session": 19,
-      "sessions": 20,
-      "notes": "Composition en présentiel"
+      "session": 20,
+      "sessions": 21,
+      "notes": "Composition en présentiel · Thématique : Mobilité internationale"
     },
     {
       "id": "2026-11-30T09:00|USEG07|Production du froid",
@@ -352,7 +374,8 @@
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
       "session": 17,
-      "sessions": 29
+      "sessions": 29,
+      "notes": "Thématique : Mobilité internationale"
     },
     {
       "id": "2026-11-30T13:30|USEG07|Production du froid",
@@ -370,7 +393,8 @@
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
       "session": 18,
-      "sessions": 29
+      "sessions": 29,
+      "notes": "Thématique : Mobilité internationale"
     },
     {
       "id": "2026-12-01T09:00|USEG06|Résistance des matériaux",
@@ -387,9 +411,9 @@
       "category": "Contrôle continu",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
-      "session": 20,
-      "sessions": 20,
-      "notes": "Composition en présentiel"
+      "session": 21,
+      "sessions": 21,
+      "notes": "Composition en présentiel · Thématique : Mobilité internationale"
     },
     {
       "id": "2026-12-01T13:30|USEG07|Turbomachines",
@@ -407,7 +431,8 @@
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
       "session": 19,
-      "sessions": 29
+      "sessions": 29,
+      "notes": "Thématique : Mobilité internationale"
     },
     {
       "id": "2026-12-03T13:30|USEG0A|",
@@ -424,7 +449,8 @@
       "category": "Cours mutualisé",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "session": 18,
-      "sessions": 74
+      "sessions": 74,
+      "notes": "Thématique : Mobilité internationale"
     },
     {
       "id": "2026-12-04T09:00|USEG07|Turbomachines",
@@ -442,7 +468,8 @@
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
       "session": 20,
-      "sessions": 29
+      "sessions": 29,
+      "notes": "Thématique : Mobilité internationale"
     },
     {
       "id": "2026-12-07T09:00|USR24K|Innovation et Intelligence stragétique",
@@ -460,7 +487,8 @@
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
       "session": 1,
-      "sessions": 31
+      "sessions": 31,
+      "notes": "Thématique : Mobilité internationale"
     },
     {
       "id": "2026-12-07T09:00|USR24K|Innovation et Intelligence stragétique#2",
@@ -478,7 +506,8 @@
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
       "session": 1,
-      "sessions": 31
+      "sessions": 31,
+      "notes": "Thématique : Mobilité internationale"
     },
     {
       "id": "2026-12-07T13:30|USR24K|Innovation et Intelligence stragétique",
@@ -496,7 +525,8 @@
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
       "session": 3,
-      "sessions": 31
+      "sessions": 31,
+      "notes": "Thématique : Mobilité internationale"
     },
     {
       "id": "2026-12-07T13:30|USR24K|Innovation et Intelligence stragétique#2",
@@ -514,7 +544,8 @@
       "group": "2025/2028-ALT-Nancy-ING7400A Premier semestre",
       "ue": "Transitions S7",
       "session": 3,
-      "sessions": 31
+      "sessions": 31,
+      "notes": "Thématique : Mobilité internationale"
     },
     {
       "id": "2026-12-08T09:00|USR24K|",

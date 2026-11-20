@@ -1,5 +1,130 @@
 [
   {
+    "at": "2026-11-20T22:16:03.502Z",
+    "changes": [
+      {
+        "kind": "added",
+        "after": {
+          "id": "2026-11-25T09:00|USEG06|Energie électrique",
+          "date": "2026-11-25",
+          "start": "09:00",
+          "end": "12:30",
+          "code": "USEG06",
+          "title": "Energie électrique",
+          "type": "Cours",
+          "room": "Salle 106",
+          "teacher": "M REBAA El-Hadi",
+          "exam": false
+        }
+      },
+      {
+        "kind": "modified",
+        "before": {
+          "id": "2026-11-26T09:00|USEG07|ACV",
+          "date": "2026-11-26",
+          "start": "09:00",
+          "end": "11:00",
+          "code": "USEG07",
+          "title": "ACV",
+          "type": "Examen",
+          "room": "Salle 214",
+          "teacher": "M PATISSON Fabrice",
+          "exam": true
+        },
+        "after": {
+          "id": "2026-11-26T09:00|USEG07|ACV",
+          "date": "2026-11-26",
+          "start": "09:00",
+          "end": "11:00",
+          "code": "USEG07",
+          "title": "ACV",
+          "type": "Examen",
+          "room": "Salle 214",
+          "teacher": "M PATISSON Fabrice",
+          "exam": true
+        },
+        "fields": [
+          {
+            "field": "notes",
+            "label": "Remarque",
+            "old": "Composition en présentiel",
+            "new": "Composition en présentiel · Thématique : Mobilité internationale"
+          }
+        ]
+      },
+      {
+        "kind": "modified",
+        "before": {
+          "id": "2026-11-27T13:30|USEG06|Modélisation numérique",
+          "date": "2026-11-27",
+          "start": "13:30",
+          "end": "15:30",
+          "code": "USEG06",
+          "title": "Modélisation numérique",
+          "type": "Examen",
+          "room": "Salle 106",
+          "teacher": "M REBAA El-Hadi",
+          "exam": true
+        },
+        "after": {
+          "id": "2026-11-27T13:30|USEG06|Modélisation numérique",
+          "date": "2026-11-27",
+          "start": "13:30",
+          "end": "15:30",
+          "code": "USEG06",
+          "title": "Modélisation numérique",
+          "type": "Examen",
+          "room": "Salle 106",
+          "teacher": "M REBAA El-Hadi",
+          "exam": true
+        },
+        "fields": [
+          {
+            "field": "notes",
+            "label": "Remarque",
+            "old": "Composition en présentiel",
+            "new": "Composition en présentiel · Thématique : Mobilité internationale"
+          }
+        ]
+      },
+      {
+        "kind": "modified",
+        "before": {
+          "id": "2026-12-01T09:00|USEG06|Résistance des matériaux",
+          "date": "2026-12-01",
+          "start": "09:00",
+          "end": "11:00",
+          "code": "USEG06",
+          "title": "Résistance des matériaux",
+          "type": "Examen",
+          "room": "Salle 106",
+          "teacher": "M KOUITAT Richard",
+          "exam": true
+        },
+        "after": {
+          "id": "2026-12-01T09:00|USEG06|Résistance des matériaux",
+          "date": "2026-12-01",
+          "start": "09:00",
+          "end": "11:00",
+          "code": "USEG06",
+          "title": "Résistance des matériaux",
+          "type": "Examen",
+          "room": "Salle 106",
+          "teacher": "M KOUITAT Richard",
+          "exam": true
+        },
+        "fields": [
+          {
+            "field": "notes",
+            "label": "Remarque",
+            "old": "Composition en présentiel",
+            "new": "Composition en présentiel · Thématique : Mobilité internationale"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "at": "2026-11-20T14:00:59.592Z",
     "changes": [
       {
