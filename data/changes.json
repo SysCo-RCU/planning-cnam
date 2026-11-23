@@ -1,5 +1,355 @@
 [
   {
+    "at": "2026-11-23T08:13:02.199Z",
+    "changes": [
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-01-25T09:00|USR24K|#2",
+          "date": "2027-01-25",
+          "start": "09:00",
+          "end": "12:30",
+          "code": "USR24K",
+          "title": "",
+          "type": "Transitions",
+          "room": "Salle 108",
+          "teacher": "Mme EN COURS RECRUTEMENT ENSEIGNANT",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-01-25T09:00|USR24K|#3",
+          "date": "2027-01-25",
+          "start": "09:00",
+          "end": "12:30",
+          "code": "USR24K",
+          "title": "",
+          "type": "TPAE",
+          "room": "Salle 106",
+          "teacher": "Mme EN COURS RECRUTEMENT ENSEIGNANT",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-01-25T13:30|USR24K|",
+          "date": "2027-01-25",
+          "start": "13:30",
+          "end": "17:00",
+          "code": "USR24K",
+          "title": "",
+          "type": "Transitions",
+          "room": "Salle 302",
+          "teacher": "Mme EN COURS RECRUTEMENT ENSEIGNANT",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-01-25T13:30|USR24K|#2",
+          "date": "2027-01-25",
+          "start": "13:30",
+          "end": "17:00",
+          "code": "USR24K",
+          "title": "",
+          "type": "Transitions",
+          "room": "Salle 108",
+          "teacher": "Mme EN COURS RECRUTEMENT ENSEIGNANT",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-01-25T13:30|USR24K|#3",
+          "date": "2027-01-25",
+          "start": "13:30",
+          "end": "17:00",
+          "code": "USR24K",
+          "title": "",
+          "type": "TPAE",
+          "room": "Salle 106",
+          "teacher": "Mme EN COURS RECRUTEMENT ENSEIGNANT",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-01-26T09:00|USR24K|",
+          "date": "2027-01-26",
+          "start": "09:00",
+          "end": "12:30",
+          "code": "USR24K",
+          "title": "",
+          "type": "Cours Transition",
+          "room": "Salle 201",
+          "teacher": "Mme HANNA Marie",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-01-26T13:30|USR24K|",
+          "date": "2027-01-26",
+          "start": "13:30",
+          "end": "17:00",
+          "code": "USR24K",
+          "title": "",
+          "type": "Cours Transition",
+          "room": "Salle 201",
+          "teacher": "Mme HANNA Marie",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-01-27T09:00|USR24K|",
+          "date": "2027-01-27",
+          "start": "09:00",
+          "end": "12:30",
+          "code": "USR24K",
+          "title": "",
+          "type": "Transitions",
+          "room": "Salle 302",
+          "teacher": "M GRIFFITHS Stéphane",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-01-27T09:00|USR24K|#2",
+          "date": "2027-01-27",
+          "start": "09:00",
+          "end": "12:30",
+          "code": "USR24K",
+          "title": "",
+          "type": "Transitions",
+          "room": "Salle 108",
+          "teacher": "M GRIFFITHS Stéphane",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-01-27T13:30|USR24K|Entreprenariat Intrapreneuriat",
+          "date": "2027-01-27",
+          "start": "13:30",
+          "end": "17:00",
+          "code": "USR24K",
+          "title": "Entreprenariat Intrapreneuriat",
+          "type": "Transitions",
+          "room": "Salle 302",
+          "teacher": "M GRIFFITHS Stéphane",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-01-27T13:30|USR24K|Entreprenariat Intrapreneuriat#2",
+          "date": "2027-01-27",
+          "start": "13:30",
+          "end": "17:00",
+          "code": "USR24K",
+          "title": "Entreprenariat Intrapreneuriat",
+          "type": "Transitions",
+          "room": "Salle 108",
+          "teacher": "M GRIFFITHS Stéphane",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-01-28T13:30|USEG0A|",
+          "date": "2027-01-28",
+          "start": "13:30",
+          "end": "17:00",
+          "code": "USEG0A",
+          "title": "",
+          "type": "Cours mutualisé",
+          "room": "Salle 303",
+          "teacher": "M CONSOLI Francois-Xavier",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-01-29T09:00|USR24K|Innovation et Intelligence stragétique",
+          "date": "2027-01-29",
+          "start": "09:00",
+          "end": "14:00",
+          "code": "USR24K",
+          "title": "Innovation et Intelligence stragétique",
+          "type": "TD",
+          "room": "Salle 302",
+          "teacher": "Mme HANNA Marie",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-01-29T09:00|USR24K|Innovation et Intelligence stragétique#2",
+          "date": "2027-01-29",
+          "start": "09:00",
+          "end": "12:30",
+          "code": "USR24K",
+          "title": "Innovation et Intelligence stragétique",
+          "type": "TPAE",
+          "room": "Salle 108",
+          "teacher": "Mme EN COURS RECRUTEMENT ENSEIGNANT",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-01-29T09:00|USR24K|Innovation et Intelligence stragétique#3",
+          "date": "2027-01-29",
+          "start": "09:00",
+          "end": "12:30",
+          "code": "USR24K",
+          "title": "Innovation et Intelligence stragétique",
+          "type": "TPAE",
+          "room": "Salle 201",
+          "teacher": "Mme EN COURS RECRUTEMENT ENSEIGNANT",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-01-29T13:30|USR24K|Innovation et Intelligence stragétique",
+          "date": "2027-01-29",
+          "start": "13:30",
+          "end": "18:30",
+          "code": "USR24K",
+          "title": "Innovation et Intelligence stragétique",
+          "type": "TD",
+          "room": "Salle 302",
+          "teacher": "Mme HANNA Marie",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-01-29T13:30|USR24K|Innovation et Intelligence stragétique#2",
+          "date": "2027-01-29",
+          "start": "13:30",
+          "end": "17:00",
+          "code": "USR24K",
+          "title": "Innovation et Intelligence stragétique",
+          "type": "TPAE",
+          "room": "Salle 108",
+          "teacher": "Mme EN COURS RECRUTEMENT ENSEIGNANT",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-01-29T13:30|USR24K|Innovation et Intelligence stragétique#3",
+          "date": "2027-01-29",
+          "start": "13:30",
+          "end": "17:00",
+          "code": "USR24K",
+          "title": "Innovation et Intelligence stragétique",
+          "type": "TPAE",
+          "room": "Salle 201",
+          "teacher": "Mme EN COURS RECRUTEMENT ENSEIGNANT",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-03-24T13:30|USR24P|#3",
+          "date": "2027-03-24",
+          "start": "13:30",
+          "end": "17:00",
+          "code": "USR24P",
+          "title": "",
+          "type": "Transitions",
+          "room": "Salle 302",
+          "teacher": "M GRIFFITHS Stéphane",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-03-25T09:00|USR24P|",
+          "date": "2027-03-25",
+          "start": "09:00",
+          "end": "12:30",
+          "code": "USR24P",
+          "title": "",
+          "type": "Transitions",
+          "room": "Salle 304",
+          "teacher": "M GRIFFITHS Stéphane",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-03-25T09:00|USR24P|#2",
+          "date": "2027-03-25",
+          "start": "09:00",
+          "end": "12:30",
+          "code": "USR24P",
+          "title": "",
+          "type": "Transitions",
+          "room": "Salle 303",
+          "teacher": "M GRIFFITHS Stéphane",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-03-25T09:00|USR24P|#3",
+          "date": "2027-03-25",
+          "start": "09:00",
+          "end": "12:30",
+          "code": "USR24P",
+          "title": "",
+          "type": "Transitions",
+          "room": "Salle 302",
+          "teacher": "M GRIFFITHS Stéphane",
+          "exam": false
+        }
+      },
+      {
+        "kind": "removed",
+        "before": {
+          "id": "2027-03-25T13:30|USEG0A|",
+          "date": "2027-03-25",
+          "start": "13:30",
+          "end": "17:00",
+          "code": "USEG0A",
+          "title": "",
+          "type": "Cours mutualisé",
+          "room": "Salle 303",
+          "teacher": "M CONSOLI Francois-Xavier",
+          "exam": false
+        }
+      }
+    ]
+  },
+  {
     "at": "2026-11-23T01:41:46.264Z",
     "changes": [
       {
