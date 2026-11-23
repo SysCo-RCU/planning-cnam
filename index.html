@@ -13,6 +13,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="extras.css?v=2">
+<link rel="stylesheet" href="reglages.css">
+<script>/* réglages appliqués avant l'affichage (évite un flash de mauvais thème) */
+try{var r=JSON.parse(localStorage.getItem('planning-cnam:reglages')||'{}'),h=document.documentElement;
+h.dataset.theme=r.theme||'auto';h.dataset.accent=r.accent||'cnam';h.dataset.taille=r.taille||'normal';
+if(r.langue==='en')h.lang='en';['frise','compteur','fantomes','animations'].forEach(function(k){if(r[k]===false)h.classList.add('sans-'+k)});
+if(r.compact)h.classList.add('compact')}catch(e){}</script>
 </head>
 <body>
 <div class="wrap">
@@ -22,6 +28,8 @@
     <div class="spacer"></div>
     <div class="status vues" id="vues" hidden></div>
     <div class="status" id="status"><span class="dot"></span><span>Chargement…</span></div>
+    <button class="btn ghost" id="reglagesBtn" type="button" aria-label="Paramètres" title="Paramètres">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg><span>Paramètres</span></button>
     <a class="btn ghost" id="ics" href="planning.ics" title="Ajouter à mon agenda (Google, Apple, Outlook)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span>Agenda</span></a>
   </header>
@@ -64,5 +72,6 @@
 <script src="extras.js"></script>
 <script src="compteur.js?v=5"></script>
 <script src="pdfvue.js"></script>
+<script src="reglages.js"></script>
 </body>
 </html>
