@@ -78,6 +78,9 @@
       const prec = await get(`enligne-${t - 1}`);
       // la tranche en cours se remplit au fil des signaux : on garde la plus haute des deux
       val.enligne = Math.max(cur, prec, moi ? 0 : 1);
+      // relecture des totaux (au cas où le flux en direct n'est pas disponible)
+      if (val.vues != null) val.vues = Math.max(val.vues, await get('vues'));
+      if (val.personnes != null) val.personnes = Math.max(val.personnes, await get('personnes'));
       afficher();
     } catch { /* service injoignable : on n'affiche pas « en ligne » */ }
   }
