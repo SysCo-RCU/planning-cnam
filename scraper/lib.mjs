@@ -344,8 +344,18 @@ export async function envoyerMail({ sujet, html, texte }) {
     secure: +(SMTP_PORT || 465) === 465,
     auth: { user: SMTP_USER, pass: SMTP_PASS },
   });
-  const to = (MAIL_TO || SMTP_USER).split(/[,;\s]+/).filter(Boolean);
-  await transport.sendMail({ from: `"Planning Cnam" <${SMTP_USER}>`, to, subject: sujet, html, text: texte });
-  console.log(`✉️  E-mail envoyé à ${to.join(', ')}`);
+  // Destinataire visible : l'expéditeur lui-même. Tous les autres sont en copie cachée (Cci),
+  // pour que personne ne voie les adresses des autres.
+  const moi = SMTP_USER.toLowerCase();
+  const cci = [...new Set((MAIL_TO || '').split(/[,;\s]+/).map((a) => a.trim().toLowerCase()).filter(Boolean))]
+    .filter((a) => a !== moi);
+  await transport.sendMail({
+    from: `"Planning Cnam (ne pas répondre)" <${SMTP_USER}>`,
+    to: SMTP_USER,
+    bcc: cci,
+    subject: sujet, html, text: texte,
+  });
+  // Les journaux du dépôt public sont visibles par tous : on n'y écrit pas les adresses.
+  console.log(`✉️  E-mail envoyé (1 destinataire + ${cci.length} en copie cachée)`);
   return true;
 }
