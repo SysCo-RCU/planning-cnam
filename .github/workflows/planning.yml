@@ -7,12 +7,13 @@ on:
   workflow_dispatch:
     inputs:
       test_email:
-        description: 'Envoyer aussi un e-mail de test'
+        description: 'Envoyer aussi une notification de test'
         type: boolean
         default: false
 
 permissions:
-  contents: write
+  contents: write   # enregistrer data/ et planning.ics
+  issues: write     # créer les notifications (issues GitHub)
 
 concurrency:
   group: planning
@@ -23,15 +24,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false   # le jeton n'est pas laissé dans .git/config
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 20
 
-      - name: Installer les dépendances
+      - name: Installer les dépendances (versions figées, sans scripts)
         run: |
-          npm install --no-audit --no-fund
+          npm ci --ignore-scripts --no-audit --no-fund
           npx playwright install --with-deps chromium
 
       - name: Lire le planning et comparer
@@ -46,6 +49,8 @@ jobs:
         run: node scraper/scrape.mjs
 
       - name: Enregistrer les nouvelles données
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -55,13 +60,26 @@ jobs:
             echo "Rien à enregistrer."
           else
             git commit -m "📅 Mise à jour du planning"
-            git pull --rebase
-            git push
+            DEPOT="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+            git pull --rebase "$DEPOT" main
+            git push "$DEPOT" HEAD:main
           fi
 
-      - name: Garder les captures en cas d'erreur
+      - name: Envoyer les notifications GitHub
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          for f in .notif/*.md; do
+            [ -e "$f" ] || continue
+            titre=$(head -n 1 "$f")
+            tail -n +2 "$f" > "$RUNNER_TEMP/corps.md"
+            gh issue create --title "$titre" --body-file "$RUNNER_TEMP/corps.md"
+          done
+
+      - name: Garder une capture en cas d'erreur
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: debug
           path: debug/
