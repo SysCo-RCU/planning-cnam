@@ -1,7 +1,7 @@
 {
   "source": "Cnam Grand Est",
-  "updatedAt": "2026-11-23T16:24:26.393Z",
-  "lastChangeAt": "2026-11-23T16:24:26.393Z",
+  "updatedAt": "2026-11-23T16:42:48.850Z",
+  "lastChangeAt": "2026-11-23T16:42:48.850Z",
   "windowStart": "2026-11-23",
   "windowEnd": "2027-04-11",
   "events": [
@@ -204,13 +204,31 @@
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
       "session": 18,
-      "sessions": 25
+      "sessions": 26
     },
     {
-      "id": "2026-11-23T13:30|USEG07|Turbomachines",
+      "id": "2026-11-23T13:30|USEG06|Résistance des matériaux",
       "date": "2026-11-23",
       "start": "13:30",
       "end": "17:00",
+      "code": "USEG06",
+      "title": "Résistance des matériaux",
+      "type": "TPAE",
+      "exam": false,
+      "room": "Distanciel",
+      "teacher": "Mme SCOLARITÉ Surveillant.e",
+      "centre": "Centre de Nancy",
+      "category": "TPAE",
+      "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
+      "ue": "Sciences S7",
+      "session": 19,
+      "sessions": 26
+    },
+    {
+      "id": "2026-11-24T09:00|USEG07|Turbomachines",
+      "date": "2026-11-24",
+      "start": "09:00",
+      "end": "12:30",
       "code": "USEG07",
       "title": "Turbomachines",
       "type": "Cours",
@@ -222,25 +240,7 @@
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
       "session": 12,
-      "sessions": 29
-    },
-    {
-      "id": "2026-11-24T09:00|USEG07|Production du froid",
-      "date": "2026-11-24",
-      "start": "09:00",
-      "end": "12:30",
-      "code": "USEG07",
-      "title": "Production du froid",
-      "type": "Cours",
-      "exam": false,
-      "room": "Salle 106",
-      "teacher": "M BENAMAR Brahim",
-      "centre": "Centre de Nancy",
-      "category": "Cours",
-      "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
-      "ue": "Sciences et techniques de l'ingénieur S7",
-      "session": 13,
-      "sessions": 29
+      "sessions": 28
     },
     {
       "id": "2026-11-24T13:30|USEG07|Production du froid",
@@ -257,8 +257,8 @@
       "category": "Cours",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
-      "session": 14,
-      "sessions": 29
+      "session": 13,
+      "sessions": 28
     },
     {
       "id": "2026-11-25T09:00|USEG06|Energie électrique",
@@ -275,8 +275,8 @@
       "category": "Cours",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
-      "session": 19,
-      "sessions": 25
+      "session": 20,
+      "sessions": 26
     },
     {
       "id": "2026-11-25T13:30|USEG07|Turbomachines",
@@ -293,8 +293,8 @@
       "category": "Cours",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
-      "session": 15,
-      "sessions": 29
+      "session": 14,
+      "sessions": 28
     },
     {
       "id": "2026-11-26T09:00|USEG07|ACV",
@@ -311,8 +311,8 @@
       "category": "Contrôle continu",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
-      "session": 16,
-      "sessions": 29,
+      "session": 15,
+      "sessions": 28,
       "notes": "Composition en présentiel"
     },
     {
@@ -347,8 +347,8 @@
       "category": "Contrôle continu",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
-      "session": 20,
-      "sessions": 25,
+      "session": 21,
+      "sessions": 26,
       "notes": "Composition en présentiel"
     },
     {
@@ -366,8 +366,8 @@
       "category": "Cours",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
-      "session": 17,
-      "sessions": 29
+      "session": 16,
+      "sessions": 28
     },
     {
       "id": "2026-11-30T13:30|USEG07|Production du froid",
@@ -384,8 +384,8 @@
       "category": "Cours",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
-      "session": 18,
-      "sessions": 29
+      "session": 17,
+      "sessions": 28
     },
     {
       "id": "2026-12-01T09:00|USEG06|Résistance des matériaux",
@@ -402,8 +402,8 @@
       "category": "Contrôle continu",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
-      "session": 21,
-      "sessions": 25,
+      "session": 22,
+      "sessions": 26,
       "notes": "Composition en présentiel"
     },
     {
@@ -421,8 +421,8 @@
       "category": "Cours",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
-      "session": 19,
-      "sessions": 29
+      "session": 18,
+      "sessions": 28
     },
     {
       "id": "2026-12-02T09:00|USEG06|Energie électrique",
@@ -439,8 +439,8 @@
       "category": "TPAE",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
-      "session": 22,
-      "sessions": 25,
+      "session": 23,
+      "sessions": 26,
       "notes": "Thématique : Réunion Promo"
     },
     {
@@ -458,8 +458,8 @@
       "category": "Cours",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
-      "session": 23,
-      "sessions": 25,
+      "session": 24,
+      "sessions": 26,
       "notes": "Thématique : Réunion Promo"
     },
     {
@@ -477,8 +477,8 @@
       "category": "Cours",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
-      "session": 24,
-      "sessions": 25,
+      "session": 25,
+      "sessions": 26,
       "notes": "Thématique : Réunion Promo"
     },
     {
@@ -514,8 +514,8 @@
       "category": "Cours",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
-      "session": 20,
-      "sessions": 29,
+      "session": 19,
+      "sessions": 28,
       "notes": "Thématique : Réunion Promo"
     },
     {
@@ -533,8 +533,8 @@
       "category": "Cours",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
-      "session": 25,
-      "sessions": 25,
+      "session": 26,
+      "sessions": 26,
       "notes": "Thématique : Réunion Promo"
     },
     {
@@ -754,8 +754,8 @@
       "category": "Cours",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
-      "session": 21,
-      "sessions": 29,
+      "session": 20,
+      "sessions": 28,
       "notes": "Thématique : Lancement Sérious game"
     },
     {
@@ -773,8 +773,8 @@
       "category": "Cours",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
-      "session": 22,
-      "sessions": 29,
+      "session": 21,
+      "sessions": 28,
       "notes": "Thématique : Lancement Sérious game"
     },
     {
@@ -792,8 +792,8 @@
       "category": "Cours",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
-      "session": 23,
-      "sessions": 29,
+      "session": 22,
+      "sessions": 28,
       "notes": "Thématique : Lancement Sérious game"
     },
     {
@@ -811,8 +811,8 @@
       "category": "Cours",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
-      "session": 24,
-      "sessions": 29,
+      "session": 23,
+      "sessions": 28,
       "notes": "Thématique : Lancement Sérious game"
     },
     {
@@ -848,8 +848,8 @@
       "category": "Cours",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
-      "session": 25,
-      "sessions": 29,
+      "session": 24,
+      "sessions": 28,
       "notes": "Thématique : Lancement Sérious game"
     },
     {
@@ -867,8 +867,8 @@
       "category": "Cours",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
-      "session": 26,
-      "sessions": 29,
+      "session": 25,
+      "sessions": 28,
       "notes": "Thématique : Lancement Sérious game"
     },
     {
@@ -924,8 +924,8 @@
       "category": "Cours",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
-      "session": 27,
-      "sessions": 29,
+      "session": 26,
+      "sessions": 28,
       "notes": "Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -961,8 +961,8 @@
       "category": "Contrôle continu",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
-      "session": 28,
-      "sessions": 29,
+      "session": 27,
+      "sessions": 28,
       "notes": "Composition en présentiel · Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
@@ -980,8 +980,8 @@
       "category": "Contrôle continu",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences et techniques de l'ingénieur S7",
-      "session": 29,
-      "sessions": 29,
+      "session": 28,
+      "sessions": 28,
       "notes": "Composition en présentiel · Thématique : INNOVATION Restitution de l’exploration & atelier Attributs®"
     },
     {
