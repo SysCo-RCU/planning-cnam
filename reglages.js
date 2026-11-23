@@ -4,7 +4,7 @@
   const CLE = 'planning-cnam:reglages';
   const DEFAUT = {
     langue: 'fr', theme: 'auto', accent: 'cnam', taille: 'normal', onglet: 'week',
-    frise: true, compteur: true, fantomes: true, weekend: true, compact: false, animations: true,
+    frise: true, fantomes: true, weekend: true, compact: false, animations: true,
   };
   const R = { ...DEFAUT };
   try { Object.assign(R, JSON.parse(localStorage.getItem(CLE) || '{}')); } catch {}
@@ -25,7 +25,6 @@
       affichage: 'Affichage',
       opts: {
         frise: ["Frise d'alternance", 'Les semaines Cnam / entreprise en haut de la page'],
-        compteur: ['Compteur de vues', 'En ligne, vues et personnes dans l\'en-tête'],
         fantomes: ['Cours supprimés ou déplacés', 'Les garder en filigrane dans la semaine'],
         weekend: ['Le week-end, ouvrir la semaine suivante', 'Sinon, la semaine en cours reste affichée'],
         compact: ['Affichage compact', 'Cartes plus serrées, plus de cours à l\'écran'],
@@ -46,7 +45,6 @@
       affichage: 'Display',
       opts: {
         frise: ['Work-study timeline', 'Cnam / company weeks at the top of the page'],
-        compteur: ['View counter', 'Online, views and people in the header'],
         fantomes: ['Removed or moved classes', 'Keep them faded in the week view'],
         weekend: ['On weekends, open next week', 'Otherwise the current week stays on screen'],
         compact: ['Compact layout', 'Tighter cards, more classes on screen'],
@@ -259,7 +257,7 @@
     html.dataset.theme = R.theme;
     html.dataset.accent = R.accent;
     html.dataset.taille = R.taille;
-    for (const k of ['frise', 'compteur', 'fantomes', 'animations']) html.classList.toggle('sans-' + k, !R[k]);
+    for (const k of ['frise', 'fantomes', 'animations']) html.classList.toggle('sans-' + k, !R[k]);
     html.classList.toggle('compact', !!R.compact);
     couleurBarre();
     if (cle === 'weekend' && typeof S !== 'undefined') {
