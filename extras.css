@@ -18,3 +18,16 @@
 .vues .vl{display:inline-flex;align-items:center;gap:6px}
 .vues .dot{width:7px;height:7px}
 @media (max-width:560px){header .status{width:auto;flex:1 1 100%}.vues{order:6}}
+/* visionneuse du calendrier PDF */
+dialog.pdfv{width:100vw;height:100vh;height:100dvh;max-width:none;max-height:none;margin:0;inset:0;border-radius:0;display:none;flex-direction:column;background:var(--bg);color:var(--ink)}
+dialog.pdfv[open]{display:flex}
+.pdfv-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;padding-top:max(10px,env(safe-area-inset-top));border-bottom:1px solid var(--line);background:var(--card)}
+.pdfv-t{flex:1;min-width:0;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pdfv-act{display:flex;gap:8px;align-items:center;margin-left:auto}
+.pdfv-act .ib{font-size:20px;font-weight:700;line-height:1}
+.pdfv-act .ib:disabled{opacity:.35}
+.pdfv-pages{flex:1;overflow:auto;padding:12px;padding-bottom:max(12px,env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
+.pdfv-pages canvas{display:block;width:calc(100% * var(--z,1));max-width:none;height:auto;margin:0 auto 12px;background:#fff;box-shadow:0 4px 18px -8px rgba(0,0,0,.35);border-radius:4px}
+.pdfv-msg{text-align:center;color:var(--ink2);padding:40px 10px;line-height:1.6}
+.pdfv-msg a{color:var(--red);font-weight:600}
+@media (max-width:560px){.pdfv-t{display:none}.pdfv-act{margin-left:0;width:100%}.pdfv-x{margin-left:auto}}
