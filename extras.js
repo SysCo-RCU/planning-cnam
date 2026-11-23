@@ -5,7 +5,23 @@ const heures = (h) => String(Math.round(h * 10) / 10).replace('.', ',') + ' h';
 const jSemaine = (d) => `${JOURS[d.getDay()].slice(0, 3)}. ${d.getDate()} ${MOISC[d.getMonth()]}`;
 // un même cours donné dans plusieurs salles en parallèle ne compte qu'une fois
 const uniques = (liste) => { const vus = new Set(); return liste.filter((e) => { const k = `${e.date}|${e.start}|${matiere(e)}`; return !vus.has(k) && vus.add(k); }); };
-const TYPES = { ecole: ['🎓', 'Cnam'], mixte: ['½', 'Mixte'], entreprise: ['🏭', 'Entreprise'] };
+const TYPES = { ecole: ['🎓', 'Cnam'], entreprise: ['🏭', 'Entreprise'] };
+
+/* ================================================================ calendrier officiel */
+// data/calendrier.json : calendrier prévisionnel du Cnam (jour → cnam / ent / ferie)
+fetch(`data/calendrier.json?t=${Date.now()}`).then((r) => (r.ok ? r.json() : null)).then((c) => {
+  if (!c?.jours) return;
+  S.cal = c.jours; S.calSource = c.source || '';
+  if (S.data) { calculerSemaines(); rendreTout(); }
+}).catch(() => {});
+
+// statut d'un jour : 'cnam' | 'ent' | 'ferie' | null (inconnu)
+function statutJour(iso) {
+  if (S.cal?.[iso]) return S.cal[iso];
+  const d = parseISO(iso).getDay();
+  if (S.cal || d === 0 || d === 6 || iso > S.data.windowEnd) return null;
+  return S.data.events.some((e) => e.date === iso) ? 'cnam' : 'ent';
+}
 
 /* ================================================================ semaines école / entreprise */
 function calculerSemaines() {
@@ -13,15 +29,37 @@ function calculerSemaines() {
   S.semaines = [];
   if (!ev.length) return;
   const premier = ev.reduce((m, e) => (e.date < m ? e.date : m), ev[0].date);
-  const fin = monday(parseISO(S.data.windowEnd));
-  for (let lun = monday(parseISO(premier)); lun <= fin; lun = addDays(lun, 7)) {
+  let debut = monday(parseISO(premier)), fin = monday(parseISO(S.data.windowEnd));
+  if (S.cal) {
+    // toute l'année de formation en cours (de la rentrée au dernier jour au Cnam)
+    const auj = new Date(), y = auj.getMonth() >= 8 ? auj.getFullYear() : auj.getFullYear() - 1;
+    const cnam = Object.keys(S.cal).filter((d) => S.cal[d] === 'cnam' && d >= `${y}-09-01` && d <= `${y + 1}-08-31`).sort();
+    if (cnam.length) {
+      debut = monday(parseISO(cnam[0]));
+      const f = monday(parseISO(cnam[cnam.length - 1]));
+      if (f > fin) fin = f;
+    }
+  }
+  const connu = monday(parseISO(S.data.windowEnd));
+  for (let lun = debut; lun <= fin; lun = addDays(lun, 7)) {
     const a = dISO(lun), b = dISO(addDays(lun, 6));
     const n = new Set(ev.filter((e) => e.date >= a && e.date <= b).map((e) => e.date)).size;
-    S.semaines.push({ lun, iso: a, jours: n, type: n >= 3 ? 'ecole' : n ? 'mixte' : 'entreprise' });
+    // semaine Cnam s'il y a au moins un jour au Cnam (calendrier officiel, sinon cours publiés)
+    const offi = [0, 1, 2, 3, 4].map((i) => S.cal?.[dISO(addDays(lun, i))]).filter((v) => v && v !== 'ferie');
+    const type = offi.length ? (offi.includes('cnam') ? 'ecole' : 'entreprise') : n ? 'ecole' : 'entreprise';
+    S.semaines.push({ lun, iso: a, jours: n, type, prev: lun > connu });
   }
 }
 const infoSemaine = (lun) => (S.semaines || []).find((s) => s.iso === dISO(lun));
-const retourCnam = (apres) => S.data.events.find((e) => startOf(e) > apres);
+// premier jour au Cnam après une date (calendrier officiel, sinon premier cours publié)
+function retourCnam(apres) {
+  const cours = S.data.events.find((e) => startOf(e) > apres);
+  if (!S.cal) return cours ? { date: cours.date, cours } : null;
+  const iso = dISO(apres);
+  const d = Object.keys(S.cal).filter((k) => k >= iso && S.cal[k] === 'cnam').sort()[0];
+  if (!d) return cours ? { date: cours.date, cours } : null;
+  return { date: d, cours: cours && cours.date === d ? cours : null };
+}
 
 function rendreFrise() {
   const el = $('#frise');
@@ -32,9 +70,9 @@ function rendreFrise() {
     const jeudi = addDays(s.lun, 3);
     const m = jeudi.getMonth() !== moisPrec ? MOISC[jeudi.getMonth()] : '';
     moisPrec = jeudi.getMonth();
-    const lib = s.type === 'entreprise' ? 'en entreprise' : `${s.jours} jour${s.jours > 1 ? 's' : ''} au Cnam`;
-    return `<button class="wk ${s.type}${s.iso === cur ? ' cur' : ''}${s.iso < cur ? ' past' : ''}" data-w="${s.iso}" title="Semaine ${isoWeek(s.lun)} (${jSemaine(s.lun)}) : ${lib}">
-      <span class="m">${m}</span><span class="b">${s.type === 'entreprise' ? '🏭' : s.type === 'mixte' ? s.jours : ''}</span><span class="n">${isoWeek(s.lun)}</span></button>`;
+    const lib = (s.type === 'entreprise' ? 'en entreprise' : 'au Cnam') + (s.prev ? ' (prévisionnel, cours pas encore publiés)' : '');
+    return `<button class="wk ${s.type}${s.iso === cur ? ' cur' : ''}${s.iso < cur ? ' past' : ''}${s.prev ? ' prev' : ''}" data-w="${s.iso}" title="Semaine ${isoWeek(s.lun)} (${jSemaine(s.lun)}) : ${lib}">
+      <span class="m">${m}</span><span class="b">${s.type === 'entreprise' ? '🏭' : ''}</span><span class="n">${isoWeek(s.lun)}</span></button>`;
   }).join('');
 
   // résumé : où j'en suis et prochaine bascule
@@ -42,8 +80,7 @@ function rendreFrise() {
   const ici = S.semaines[i];
   const morceaux = [];
   if (ici) {
-    morceaux.push(ici.type === 'entreprise' ? 'Cette semaine : <b>🏭 en entreprise</b>'
-      : `Cette semaine : <b>🎓 ${ici.jours} jour${ici.jours > 1 ? 's' : ''} au Cnam</b>`);
+    morceaux.push(ici.type === 'entreprise' ? 'Cette semaine : <b>🏭 en entreprise</b>' : 'Cette semaine : <b>🎓 au Cnam</b>');
     if (ici.type === 'entreprise') {
       const r = retourCnam(new Date());
       if (r) morceaux.push(`Retour au Cnam : <b>${esc(dateLongue(r.date))}</b>`);
@@ -59,11 +96,13 @@ function rendreFrise() {
   }
   const aVenir = S.semaines.filter((s) => s.iso >= cur);
   const nb = (t) => aVenir.filter((s) => s.type === t).length;
-  morceaux.push(`D'ici au ${esc(dateCourte(S.data.windowEnd))} : ${nb('ecole')} sem. Cnam · ${nb('mixte')} mixtes · ${nb('entreprise')} entreprise`);
+  const der = S.semaines[S.semaines.length - 1];
+  morceaux.push(`D'ici au ${esc(jSemaine(addDays(der.lun, 4)))} : ${nb('ecole')} sem. au Cnam · ${nb('entreprise')} sem. en entreprise`);
 
   el.innerHTML = `<div class="frise-card"><div class="fh"><div><div class="k">Rythme d'alternance</div><div class="fs">${morceaux.map((m) => `<span>${m}</span>`).join('')}</div></div>
-    <div class="legend"><span><i class="ecole"></i>Cnam</span><span><i class="mixte"></i>Mixte (jours au Cnam)</span><span><i class="entreprise"></i>Entreprise</span></div></div>
-    <div class="wks">${cases}</div></div>`;
+    <div class="legend"><span><i class="ecole"></i>Cnam</span><span><i class="entreprise"></i>Entreprise</span><span><i class="prev"></i>Prévisionnel</span></div></div>
+    <div class="wks">${cases}</div>
+    <div class="fsrc">${S.cal ? `Source : ${esc(S.calSource || 'calendrier du Cnam')} · les semaines « prévisionnelles » n'ont pas encore de cours publiés` : 'Déduit des cours publiés (calendrier officiel non chargé)'}</div></div>`;
   el.querySelectorAll('.wk').forEach((b) => (b.onclick = () => { S.week = parseISO(b.dataset.w); choisirOnglet('week'); }));
   const c = el.querySelector('.wk.cur');
   if (c) { const w = el.querySelector('.wks'); w.scrollLeft = Math.max(0, c.offsetLeft - w.offsetLeft - 40); }
@@ -73,9 +112,18 @@ function rendreFrise() {
 function semaineEntreprise(lun) {
   const r = retourCnam(addDays(lun, 7));
   return `<div class="placeholder ent"><div class="ico">🏭</div><h3>Semaine en entreprise</h3>
-    <p>Aucun cours au Cnam du ${esc(jSemaine(lun))} au ${esc(jSemaine(addDays(lun, 4)))}</p>
-    ${r ? `<p class="ret">Retour au Cnam : <b>${esc(dateLongue(r.date))}</b> à ${r.start} · ${esc(nom(r))}</p>` : ''}</div>`;
+    <p>Pas de Cnam du ${esc(jSemaine(lun))} au ${esc(jSemaine(addDays(lun, 4)))}</p>
+    ${r ? `<p class="ret">Retour au Cnam : <b>${esc(dateLongue(r.date))}</b>${r.cours ? ` à ${r.cours.start} · ${esc(nom(r.cours))}` : ''}</p>` : ''}</div>`;
 }
+
+// semaine au Cnam (d'après le calendrier) mais sans cours publiés
+function semaineCnamVide(lun, futur) {
+  return `<div class="placeholder"><div class="ico">🎓</div><h3>Semaine au Cnam</h3>
+    <p>${futur ? 'Les cours de cette semaine ne sont pas encore publiés.' : 'Aucun cours publié pour cette semaine au Cnam.'}</p>
+    <p class="ret">Calendrier prévisionnel : du ${esc(jSemaine(lun))} au ${esc(jSemaine(addDays(lun, 4)))}</p></div>`;
+}
+
+const LIB_JOUR = { ent: '🏭 Entreprise', ferie: '🎉 Férié' };
 
 // séparateur « semaines en entreprise » entre deux jours de la liste
 function separateurEntreprise(avant, apres) {
@@ -103,12 +151,12 @@ function vueMois(el) {
     for (let i = 0; i < nbJ; i++) {
       const d = addDays(lun, i), iso = dISO(d);
       const jour = uniques(tous.filter((e) => e.date === iso));
-      const reel = S.data.events.some((e) => e.date === iso);
-      const ent = !reel && s && i < 5 && iso <= connu;
-      const cls = ['md', d.getMonth() !== m && 'out', iso === auj && 'today', iso < auj && 'past', ent && 'ent', iso > connu && 'unk'].filter(Boolean).join(' ');
+      const st = jour.length ? 'cnam' : statutJour(iso);
+      const cls = ['md', d.getMonth() !== m && 'out', iso === auj && 'today', iso < auj && 'past', st === 'ent' && 'ent', st === 'ferie' && 'fer', iso > connu && 'unk'].filter(Boolean).join(' ');
+      const lab = !jour.length && st ? (st === 'cnam' ? (iso > connu ? '🎓<span> Cnam</span>' : '') : LIB_JOUR[st].replace(' ', '<span> ') + '</span>') : '';
       const items = jour.slice(0, 4).map((e) => `<span class="mi${e.exam ? ' exam' : ''}" style="--c:${e.exam ? 'var(--red)' : couleur(e)}" data-id="${esc(e.id)}" title="${esc(`${e.start}–${e.end} ${nom(e)} · ${e.room}`)}"><i></i><em>${e.start}</em><span class="mt">${e.exam ? '📝 ' : ''}${esc(nom(e))}</span></span>`).join('');
       const plus = jour.length > 4 ? `<span class="more">+${jour.length - 4}</span>` : '';
-      html += `<div class="${cls}" data-day="${iso}"><div class="mdn">${d.getDate()}</div><div class="mis">${items}${plus}</div>${ent ? '<span class="entl">🏭<span> Entreprise</span></span>' : ''}</div>`;
+      html += `<div class="${cls}" data-day="${iso}"><div class="mdn">${d.getDate()}</div><div class="mis">${items}${plus}</div>${lab ? `<span class="entl ${st}">${lab}</span>` : ''}</div>`;
     }
   }
   el.innerHTML = html + '</div><p class="mnote">Clique sur un jour ou une semaine pour l\'ouvrir en détail.</p>';
