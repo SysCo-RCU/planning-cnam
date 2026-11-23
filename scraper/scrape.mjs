@@ -5,9 +5,9 @@
 //   PLANNING_URL   lien du QR code du planning (obligatoire)
 //   WEEKS_AHEAD    nombre de semaines à lire (défaut 20)
 //   FETCH_DETAILS  "false" pour ne pas ouvrir le détail de chaque cours (enseignant, centre…)
-//   SMTP_USER / SMTP_PASS / MAIL_TO / SMTP_HOST / SMTP_PORT   envoi des e-mails
+//   SMTP_USER / SMTP_PASS / MAIL_TO / SMTP_HOST / SMTP_PORT   e-mail SMTP (facultatif)
 //   PAGE_URL       adresse de la page GitHub Pages (lien dans l'e-mail)
-//   TEST_EMAIL     "true" pour envoyer un e-mail de test
+//   TEST_EMAIL     "true" pour envoyer une notification de test
 import { chromium } from 'playwright';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -96,8 +96,21 @@ const cleSemaine = (page) => page.evaluate(() => {
 const btnSuivant = (page) => page.getByRole('button', { name: /Semaine suivante/i }).first();
 const btnRetour = (page) => page.getByRole('button', { name: /Revenir sur le planning/i }).first();
 
+// Masque dans les journaux GitHub l'adresse réelle du planning (après redirection)
+const dejaMasque = new Set();
+function masquer(url) {
+  if (!process.env.GITHUB_ACTIONS || !url) return;
+  const id = (url.match(/[?&]id=([^&#]+)/) || [])[1];
+  const valeurs = [url];
+  if (id) { valeurs.push(id); try { valeurs.push(decodeURIComponent(id)); } catch { /* ignore */ } }
+  for (const v of valeurs) {
+    if (v && !dejaMasque.has(v)) { dejaMasque.add(v); console.log(`::add-mask::${v}`); }
+  }
+}
+
 async function ouvrir(page) {
   await page.goto(URL_PLANNING, { waitUntil: 'load', timeout: 60000 });
+  masquer(page.url());
   await attendre(page, async () => !!(await cleSemaine(page)));
 }
 
@@ -175,13 +188,55 @@ async function ecrireJson(fichier, obj) {
   await fs.writeFile(fichier, JSON.stringify(obj, null, 2) + '\n');
 }
 
+// ------------------------------------------------------------ notifications GitHub
+// Chaque notification est écrite dans .notif/NN.md (1re ligne = titre). L'étape suivante du
+// workflow en fait une « issue » GitHub : GitHub envoie alors l'e-mail tout seul.
+const NOTIF = path.join(RACINE, '.notif');
+let nbNotif = 0;
+// Neutralise le Markdown et les @mentions dans les textes venant du site du Cnam
+const md = (s) => String(s ?? '').replace(/[\\`*_{}[\]()#+!|<>~]/g, '\\$&').replace(/@/g, '@\u200b');
+
+async function notifier(titre, lignes) {
+  await fs.mkdir(NOTIF, { recursive: true });
+  const proprio = process.env.GITHUB_REPOSITORY_OWNER;
+  const corps = [proprio ? `@${proprio}` : '', '', ...lignes, '',
+    PAGE_URL ? `[Voir mon planning](${PAGE_URL})` : ''].join('\n');
+  nbNotif++;
+  const fichier = path.join(NOTIF, `${String(nbNotif).padStart(2, '0')}.md`);
+  await fs.writeFile(fichier, `${titre.replace(/[\r\n]+/g, ' ')}\n${corps}\n`);
+}
+
+const LIBELLES = { added: '🟢 **Ajouté**', removed: '🔴 **Supprimé**', moved: '🟠 **Déplacé**', modified: '🔵 **Modifié**' };
+function lignesChangements(changes) {
+  const quand = (e) => `${dateLisible(e.date)} ${e.start}–${e.end}`;
+  const nom = (e) => md(`${e.code}${e.title ? ' – ' + e.title : ''}${e.exam ? ' (' + e.type + ')' : ''}`);
+  return changes.map((c) => {
+    const e = c.after || c.before;
+    let d = '';
+    if (c.kind === 'added') d = `${quand(e)} · ${md(e.room)}`;
+    if (c.kind === 'removed') d = `~~${quand(e)} · ${md(e.room)}~~`;
+    if (c.kind === 'moved') d = `~~${quand(c.before)} · ${md(c.before.room)}~~ → **${quand(c.after)} · ${md(c.after.room)}**`;
+    if (c.kind === 'modified') d = `${quand(e)} — ` + c.fields.map((f) => `${md(f.label)} : ~~${md(f.old || '—')}~~ → **${md(f.new || '—')}**`).join(' ; ');
+    return `- ${LIBELLES[c.kind]} — ${nom(e)} : ${d}`;
+  });
+}
+
+// L'e-mail par SMTP est facultatif : s'il échoue, on continue (la notification GitHub suffit)
+async function envoyerMailSiConfigure(message) {
+  try { await envoyerMail(message); } catch (err) { console.warn(`⚠️  E-mail SMTP non envoyé : ${err.message}`); }
+}
+
 // ------------------------------------------------------------ programme principal
 async function main() {
   if (!URL_PLANNING) throw new Error('Variable PLANNING_URL manquante (secret GitHub).');
   await fs.mkdir(DATA, { recursive: true });
 
   if (process.env.TEST_EMAIL === 'true') {
-    await envoyerMail({
+    await notifier('✅ Planning Cnam : notification de test', [
+      'Les notifications de ton planning Cnam fonctionnent.',
+      'Tu recevras un message comme celui-ci dès qu’un cours est ajouté, supprimé, déplacé ou modifié.',
+    ]);
+    await envoyerMailSiConfigure({
       sujet: '✅ Planning Cnam : e-mail de test',
       html: `<p>Les notifications de ton planning Cnam fonctionnent.</p>${PAGE_URL ? `<p><a href="${PAGE_URL}">Voir le planning</a></p>` : ''}`,
       texte: `Les notifications de ton planning Cnam fonctionnent.\n${PAGE_URL}`,
@@ -208,8 +263,8 @@ async function main() {
       }
     }
     if (!resultat) {
+      // Seulement une capture d'écran : la page HTML pourrait contenir l'adresse privée du planning
       await fs.mkdir(DEBUG, { recursive: true });
-      await fs.writeFile(path.join(DEBUG, 'page.html'), await page.content().catch(() => ''));
       await page.screenshot({ path: path.join(DEBUG, 'page.png'), fullPage: true }).catch(() => {});
       throw derniereErreur;
     }
@@ -278,11 +333,15 @@ async function main() {
       const e = c.after || c.before;
       console.log(`  - ${c.kind} ${e.code} ${e.title} ${dateLisible(e.date)} ${e.start}`);
     }
-    await envoyerMail(emailChangements(changes, PAGE_URL));
+    const message = emailChangements(changes, PAGE_URL);
+    const n = changes.length;
+    await notifier(message.sujet, [`**${n} modification${n > 1 ? 's' : ''}** détectée${n > 1 ? 's' : ''} dans ton planning :`, '', ...lignesChangements(changes)]);
+    await envoyerMailSiConfigure(message);
   } else if (!ancien) {
     await ecrireJson(fChanges, historique);
     const nbExamens = events.filter((e) => e.exam).length;
-    await envoyerMail({
+    await notifier('✅ Suivi du planning Cnam activé', [`${events.length} créneaux lus (dont ${nbExamens} examens) du ${dateLisible(debut)} au ${dateLisible(fin)}.`]);
+    await envoyerMailSiConfigure({
       sujet: '✅ Suivi du planning Cnam activé',
       html: `<p>Le suivi de ton planning Cnam est en place : <b>${events.length}</b> créneaux lus (dont ${nbExamens} examens) du ${dateLisible(debut)} au ${dateLisible(fin)}.</p><p>Tu recevras un e-mail dès qu'un cours est ajouté, supprimé, déplacé ou modifié.</p>${PAGE_URL ? `<p><a href="${PAGE_URL}">Voir le planning</a></p>` : ''}`,
       texte: `Suivi du planning Cnam activé : ${events.length} créneaux lus.\n${PAGE_URL}`,
