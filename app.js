@@ -38,7 +38,7 @@ const icon = {
 };
 
 /* ================================================================ état */
-const S = { data: null, changes: [], tab: 'week', week: monday(new Date()), off: new Set(JSON.parse(localStorageGet('off') || '[]')), colors: new Map(), recent: new Map(), ghosts: [] };
+const S = { data: null, changes: [], tab: 'week', week: monday(new Date()), month: new Date(new Date().getFullYear(), new Date().getMonth(), 1), q: '', semaines: [], off: new Set(JSON.parse(localStorageGet('off') || '[]')), colors: new Map(), recent: new Map(), ghosts: [] };
 function localStorageGet(k) { try { return localStorage.getItem('planning-cnam:' + k); } catch { return null; } }
 function localStorageSet(k, v) { try { localStorage.setItem('planning-cnam:' + k, v); } catch {} }
 const couleur = (e) => S.colors.get(matiere(e)) || '#888';
@@ -73,13 +73,15 @@ function preparer() {
   }
   const ids = new Set(ev.map((e) => e.id));
   S.ghosts = S.ghosts.filter((g) => !ids.has(g.id));
+  calculerSemaines();
+  indexerRecherche();
   const g = ev.find((e) => e.group)?.group;
   if (g) $('#subtitle').textContent = `Grand Est · ${g.replace(/\s+Annuel$/i, '')}`;
 }
 
 /* ================================================================ rendu */
 function rendreTout() {
-  rendreStatut(); rendreAlerte(); rendreHero(); rendreChips(); rendreVue();
+  rendreStatut(); rendreAlerte(); rendreHero(); rendreFrise(); rendreChips(); rendreVue();
 }
 
 function rendreStatut(gh) {
@@ -151,8 +153,10 @@ function rendreHero() {
   } else {
     html += `<div class="tile"><div class="k">Prochain examen</div><div class="big">Aucun examen prévu</div><div class="meta">sur les semaines connues</div></div>`;
   }
-  html += `<div class="tile"><div class="k">Cette semaine</div><div class="big">${nbSemaine.length} créneau${nbSemaine.length > 1 ? 'x' : ''}</div>
-    <div class="meta"><span>${String(Math.round(heures * 10) / 10).replace('.', ',')} h de cours</span></div>
+  const retour = !nbSemaine.length && S.data.events.find((e) => parseISO(e.date) >= addDays(monday(now), 7));
+  html += `<div class="tile"><div class="k">Cette semaine</div>${nbSemaine.length
+    ? `<div class="big">${nbSemaine.length} créneau${nbSemaine.length > 1 ? 'x' : ''}</div><div class="meta"><span>${String(Math.round(heures * 10) / 10).replace('.', ',')} h de cours</span></div>`
+    : `<div class="big">🏭 En entreprise</div><div class="meta">${retour ? `<span>Retour au Cnam : ${esc(dateCourte(retour.date))}</span>` : '<span>Aucun cours au Cnam</span>'}</div>`}
     <div class="count" style="color:var(--ink3);font-family:var(--font);font-weight:500">Planning connu jusqu'au ${esc(dateCourte(S.data.windowEnd))}</div></div>`;
   el.innerHTML = html;
   el.querySelectorAll('[data-id]').forEach((t) => (t.onclick = () => ouvrir(t.dataset.id)));
@@ -160,7 +164,7 @@ function rendreHero() {
 
 function rendreChips() {
   const el = $('#chips');
-  if (!S.data || S.tab === 'changes') { el.innerHTML = ''; return; }
+  if (!S.data || (!S.q && ['changes', 'ue'].includes(S.tab))) { el.innerHTML = ''; return; }
   const vus = new Map();
   for (const e of S.data.events) if (!vus.has(matiere(e))) vus.set(matiere(e), e);
   el.innerHTML = [...vus.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([m, e]) =>
@@ -195,14 +199,13 @@ function carte(e, opts = {}) {
 
 function rendreVue() {
   const el = $('#view');
-  $('#weeknav').style.display = S.tab === 'week' ? '' : 'none';
+  $('#weeknav').style.display = !S.q && ['week', 'month'].includes(S.tab) ? '' : 'none';
+  $('#todayBtn').textContent = S.tab === 'month' ? 'Ce mois-ci' : "Aujourd'hui";
   if (!S.data) {
     el.innerHTML = `<div class="placeholder"><h3>Le planning n'a pas encore été récupéré</h3><p>La première vérification automatique va remplir cette page (ou lance-la à la main dans l'onglet <b>Actions</b> du dépôt GitHub).</p></div>`;
     return;
   }
-  if (S.tab === 'week') vueSemaine(el);
-  if (S.tab === 'list') vueListe(el);
-  if (S.tab === 'exams') vueExamens(el);
-  if (S.tab === 'changes') vueModifs(el);
-  el.querySelectorAll('[data-id]').forEach((b) => (b.onclick = () => ouvrir(b.dataset.id, b.dataset.ghost)));
+  if (S.q) vueRecherche(el);
+  else ({ week: vueSemaine, month: vueMois, list: vueListe, exams: vueExamens, ue: vueUE, changes: vueModifs })[S.tab](el);
+  el.querySelectorAll('[data-id]').forEach((b) => (b.onclick = (ev) => { ev.stopPropagation(); ouvrir(b.dataset.id, b.dataset.ghost); }));
 }
