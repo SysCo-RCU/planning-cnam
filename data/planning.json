@@ -1,7 +1,7 @@
 {
   "source": "Cnam Grand Est",
-  "updatedAt": "2026-11-23T16:42:48.850Z",
-  "lastChangeAt": "2026-11-23T16:42:48.850Z",
+  "updatedAt": "2026-11-23T16:52:51.319Z",
+  "lastChangeAt": "2026-11-23T16:52:51.319Z",
   "windowStart": "2026-11-23",
   "windowEnd": "2027-04-11",
   "events": [
@@ -251,7 +251,7 @@
       "title": "Production du froid",
       "type": "Cours",
       "exam": false,
-      "room": "Salle 106",
+      "room": "Distanciel",
       "teacher": "M BENAMAR Brahim",
       "centre": "Centre de Nancy",
       "category": "Cours",

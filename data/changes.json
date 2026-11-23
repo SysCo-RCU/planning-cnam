@@ -1,5 +1,45 @@
 [
   {
+    "at": "2026-11-23T16:52:51.319Z",
+    "changes": [
+      {
+        "kind": "modified",
+        "before": {
+          "id": "2026-11-24T13:30|USEG07|Production du froid",
+          "date": "2026-11-24",
+          "start": "13:30",
+          "end": "17:00",
+          "code": "USEG07",
+          "title": "Production du froid",
+          "type": "Cours",
+          "room": "Salle 106",
+          "teacher": "M BENAMAR Brahim",
+          "exam": false
+        },
+        "after": {
+          "id": "2026-11-24T13:30|USEG07|Production du froid",
+          "date": "2026-11-24",
+          "start": "13:30",
+          "end": "17:00",
+          "code": "USEG07",
+          "title": "Production du froid",
+          "type": "Cours",
+          "room": "Distanciel",
+          "teacher": "M BENAMAR Brahim",
+          "exam": false
+        },
+        "fields": [
+          {
+            "field": "room",
+            "label": "Salle",
+            "old": "Salle 106",
+            "new": "Distanciel"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "at": "2026-11-23T16:42:48.850Z",
     "changes": [
       {
