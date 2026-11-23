@@ -14,6 +14,12 @@ fetch(`data/calendrier.json?t=${Date.now()}`).then((r) => (r.ok ? r.json() : nul
   S.cal = c.jours; S.calSource = c.source || '';
   if (S.data) { calculerSemaines(); rendreTout(); }
 }).catch(() => {});
+// calendrier.pdf : le PDF officiel ; le lien n'apparaît que si le fichier est présent
+fetch('calendrier.pdf', { method: 'HEAD', cache: 'no-store' }).then((r) => {
+  if (!r.ok) return;
+  S.calPdf = 'calendrier.pdf';
+  if (S.data && S.semaines) rendreFrise();
+}).catch(() => {});
 
 // statut d'un jour : 'cnam' | 'ent' | 'ferie' | null (inconnu)
 function statutJour(iso) {
@@ -102,7 +108,7 @@ function rendreFrise() {
   el.innerHTML = `<div class="frise-card"><div class="fh"><div><div class="k">Rythme d'alternance</div><div class="fs">${morceaux.map((m) => `<span>${m}</span>`).join('')}</div></div>
     <div class="legend"><span><i class="ecole"></i>Cnam</span><span><i class="entreprise"></i>Entreprise</span><span><i class="prev"></i>Prévisionnel</span></div></div>
     <div class="wks">${cases}</div>
-    <div class="fsrc">${S.cal ? `Source : ${esc(S.calSource || 'calendrier du Cnam')} · les semaines « prévisionnelles » n'ont pas encore de cours publiés` : 'Déduit des cours publiés (calendrier officiel non chargé)'}</div></div>`;
+    <div class="fsrc">${S.cal ? `Source : ${S.calPdf ? `<a href="${S.calPdf}" target="_blank" rel="noopener">📄 ${esc(S.calSource || 'calendrier du Cnam')} (PDF)</a>` : esc(S.calSource || 'calendrier du Cnam')} · les semaines « prévisionnelles » n'ont pas encore de cours publiés` : 'Déduit des cours publiés (calendrier officiel non chargé)'}</div></div>`;
   el.querySelectorAll('.wk').forEach((b) => (b.onclick = () => { S.week = parseISO(b.dataset.w); choisirOnglet('week'); }));
   const c = el.querySelector('.wk.cur');
   if (c) { const w = el.querySelector('.wks'); w.scrollLeft = Math.max(0, c.offsetLeft - w.offsetLeft - 40); }
