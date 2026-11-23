@@ -36,7 +36,6 @@ html[data-taille=tresgrand] body{zoom:1.25}
 
 /* ---------- options d'affichage */
 html.sans-frise #frise{display:none}
-html.sans-compteur #vues{display:none!important}
 html.sans-fantomes .ev.ghost{display:none}
 html.sans-animations *,html.sans-animations *::before,html.sans-animations *::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
 html.compact .hero{gap:10px;margin-bottom:14px}
