@@ -25,14 +25,19 @@
 
   <div id="alert"></div>
   <section class="hero" id="hero"></section>
+  <section id="frise"></section>
 
   <div class="bar">
     <div class="tabs" role="tablist" id="tabs">
       <button class="tab" role="tab" data-tab="week" aria-selected="true">Semaine</button>
+      <button class="tab" role="tab" data-tab="month">Mois</button>
       <button class="tab" role="tab" data-tab="list">À venir</button>
       <button class="tab" role="tab" data-tab="exams">Examens</button>
-      <button class="tab" role="tab" data-tab="changes">Modifications</button>
+      <button class="tab" role="tab" data-tab="ue">Avancement</button>
+      <button class="tab" role="tab" data-tab="changes"><span class="lg">Modifications</span><span class="sh">Modifs</span></button>
     </div>
+    <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Rechercher un cours, un prof, une salle, « Metz »…" autocomplete="off" aria-label="Rechercher"><kbd>/</kbd></label>
     <div class="weeknav" id="weeknav">
       <button class="ib" id="prev" aria-label="Semaine précédente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
       <div class="lbl" id="weeklbl"></div>
@@ -53,5 +58,6 @@
 
 <script src="app.js"></script>
 <script src="vues.js"></script>
+<script src="extras.js"></script>
 </body>
 </html>
