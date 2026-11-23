@@ -2,8 +2,8 @@ name: Vérification du planning Cnam
 
 on:
   schedule:
-    # Toutes les 2 h de 6 h à 22 h (heure de Paris en hiver ; les heures cron sont en UTC)
-    - cron: '17 5-21/2 * * *'
+    # Toutes les 10 min (à 3, 13, 23, 33, 43 et 53 de chaque heure ; GitHub peut décaler ou sauter des passages)
+    - cron: '3-59/10 * * * *'
   workflow_dispatch:
     inputs:
       test_email:
