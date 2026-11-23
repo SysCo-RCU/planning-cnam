@@ -1,8 +1,11 @@
 name: Vérification du planning Cnam
 
 on:
+  # Chaque passage relance lui-même le suivant 10 min plus tard (dernière étape).
+  # La programmation GitHub ci-dessous ne sert que de roue de secours pour redémarrer
+  # la chaîne si elle s'arrête (GitHub saute souvent ces passages programmés).
+  # Pour tout arrêter : onglet Actions → « Vérification du planning Cnam » → Disable workflow.
   schedule:
-    # Toutes les 10 min (à 3, 13, 23, 33, 43 et 53 de chaque heure ; GitHub peut décaler ou sauter des passages)
     - cron: '3-59/10 * * * *'
   workflow_dispatch:
     inputs:
@@ -14,6 +17,7 @@ on:
 permissions:
   contents: write   # enregistrer data/ et planning.ics
   issues: write     # créer les notifications (issues GitHub)
+  actions: write    # relancer la vérification suivante
 
 concurrency:
   group: planning
@@ -24,6 +28,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
+      - name: Noter l'heure de départ
+        run: echo "DEBUT=$(date +%s)" >> "$GITHUB_ENV"
+
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           persist-credentials: false   # le jeton n'est pas laissé dans .git/config
@@ -84,3 +91,15 @@ jobs:
           name: debug
           path: debug/
           if-no-files-found: ignore
+
+      # Relance la vérification suivante 10 min après le début de celle-ci (même en cas d'échec,
+      # mais pas si le passage a été annulé à la main : annuler un passage arrête la chaîne).
+      - name: Programmer la vérification suivante (dans 10 min)
+        if: ${{ !cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          reste=$(( DEBUT + 570 - $(date +%s) ))
+          if [ "$reste" -gt 0 ]; then echo "Attente de ${reste} s"; sleep "$reste"; fi
+          gh workflow run planning.yml --ref main
