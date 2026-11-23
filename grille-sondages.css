@@ -62,4 +62,31 @@
 .sv{position:relative;display:grid;color:var(--red)}
 .sv svg{width:16px;height:16px}
 .spied{font-size:12px;color:var(--ink3)}
-@media (max-width:560px){.sdgs{grid-template-columns:1fr}}
+/* création / suppression */
+.sdg-haut{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.sdg-haut .sdg-note{margin:0}
+.sdg-creer{min-height:44px;background:var(--red);color:#fff}
+.sdg-creer[hidden]{display:none}
+.sdg-form:not(:empty){margin-bottom:14px}
+.sdf{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;gap:12px;max-width:640px}
+.sdf h3{font-size:16px;font-weight:800}
+.sdf label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:var(--ink2)}
+.sdf input,.sdf select{font:inherit;font-size:15px;font-weight:500;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;min-height:44px;padding:0 12px;width:100%}
+.sdf input:focus,.sdf select:focus{outline:2px solid var(--red);outline-offset:1px;border-color:transparent}
+.sdf-opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.sdf-plus{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border-radius:10px;border:1px dashed var(--ink3);font-weight:700;font-size:13px;color:var(--ink2)}
+.sdf-plus svg{width:15px;height:15px}
+.sdf-plus[hidden]{display:none}
+.sdf-ligne{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sdf-info{font-size:12px;color:var(--ink3)}
+.sdf-err{font-size:13px;font-weight:700;color:var(--red)}
+.sdf-err:empty{display:none}
+.sdf-actions{display:flex;justify-content:flex-end;gap:8px}
+.sdf-actions .btn{min-height:44px;justify-content:center}
+.sdf-ok{background:var(--red);color:#fff}
+.sdf-ok:disabled{opacity:.6}
+.sbas{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ssup{font-size:12px;font-weight:700;color:var(--red);padding:6px 4px;min-height:32px}
+.ssup:hover{text-decoration:underline}
+.ssup:disabled{opacity:.5}
+@media (max-width:560px){.sdgs{grid-template-columns:1fr}.sdf-ligne{grid-template-columns:1fr}.sdf-actions .btn{flex:1}}
