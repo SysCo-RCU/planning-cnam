@@ -10,3 +10,11 @@
 .entl.ferie{color:var(--warn)}
 .entl.cnam{color:var(--red);opacity:.7}
 @media (max-width:960px){.day:has(.empty-day.ent),.day:has(.empty-day.ferie){min-height:0}.day .empty-day.ent,.day .empty-day.ferie{min-height:44px}}
+/* compteur de vues */
+.vues[hidden]{display:none}
+.vues{gap:7px}
+.vues b{color:var(--ink);font-weight:700}
+.vues .sep{color:var(--ink3)}
+.vues .vl{display:inline-flex;align-items:center;gap:6px}
+.vues .dot{width:7px;height:7px}
+@media (max-width:560px){header .status{width:auto;flex:1 1 100%}.vues{order:6}}
