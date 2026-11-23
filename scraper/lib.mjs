@@ -201,6 +201,25 @@ export function comparer(anciens, nouveaux, from, to) {
   return changes.sort((x, y) => cle(x).localeCompare(cle(y)));
 }
 
+// Un cours annoncé « supprimé » ces 7 derniers jours qui réapparaît à l'identique : c'était une
+// lecture ratée du site. On efface la fausse suppression de l'historique au lieu d'annoncer un « ajout ».
+export function annulerFaussesSuppressions(changes, historique, maintenant = Date.now()) {
+  const limite = maintenant - 7 * 86400000;
+  const pareil = (x, y) => ['date', 'start', 'end', 'code', 'title', 'room'].every((k) => (x[k] ?? '') === (y[k] ?? ''));
+  const hist = historique.map((h) => ({ ...h, changes: [...h.changes] }));
+  let corriges = 0;
+  const restants = changes.filter((c) => {
+    if (c.kind !== 'added') return true;
+    for (const h of hist) {
+      if (Date.parse(h.at) < limite) break;   // historique rangé du plus récent au plus ancien
+      const i = h.changes.findIndex((x) => x.kind === 'removed' && pareil(x.before, c.after));
+      if (i >= 0) { h.changes.splice(i, 1); corriges++; return false; }
+    }
+    return true;
+  });
+  return { changes: restants, historique: corriges ? hist.filter((h) => h.changes.length) : historique, corriges };
+}
+
 // ---------------------------------------------------------------- calendrier .ics
 const VTIMEZONE = [
   'BEGIN:VTIMEZONE', 'TZID:Europe/Paris',
