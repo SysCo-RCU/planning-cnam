@@ -1,5 +1,5 @@
 // Récupère le planning Cnam (site gescicca), le compare à la version précédente,
-// met à jour data/*.json + planning.ics et envoie un e-mail en cas de changement.
+// met à jour data/*.json + planning.ics et prépare une notification GitHub en cas de changement.
 //
 // Variables d'environnement :
 //   PLANNING_URL   lien du QR code du planning (obligatoire)
@@ -15,6 +15,7 @@ import { fileURLToPath } from 'node:url';
 import {
   analyserLigne, analyserDetail, attribuerIds, comparer, genererIcs,
   emailChangements, envoyerMail, finDeSemaine, iso, ajouterJours, dateLisible,
+  annulerFaussesSuppressions,
 } from './lib.mjs';
 
 const RACINE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -89,7 +90,10 @@ async function attendre(page, condition, delai = 30000) {
   throw new Error('Délai dépassé en attendant la page');
 }
 
+// La clé n'est lue que sur une page ENTIÈREMENT chargée : le site renvoie toute la page à chaque
+// clic, et l'en-tête arrive avant le tableau des cours (sinon on lit une semaine à moitié affichée).
 const cleSemaine = (page) => page.evaluate(() => {
+  if (document.readyState !== 'complete') return null;
   const m = document.body.innerText.replace(/\s+/g, ' ').match(/Planning du\s+(.*?\bau\s+\d{1,2}\s+\S+\s+\d{4})/i);
   return m ? m[1] : null;
 });
@@ -108,10 +112,24 @@ function masquer(url) {
   }
 }
 
+// Attend que la page ne bouge plus : chargement terminé et nombre de lignes stable
+async function pageStable(page) {
+  await page.waitForLoadState('load').catch(() => {});
+  let avant = -2;
+  for (let i = 0; i < 20; i++) {
+    const n = await page.evaluate(() => (document.readyState === 'complete'
+      ? document.querySelectorAll('tr').length : -1)).catch(() => -1);
+    if (n >= 0 && n === avant) return;
+    avant = n;
+    await pause(400);
+  }
+}
+
 async function ouvrir(page) {
   await page.goto(URL_PLANNING, { waitUntil: 'load', timeout: 60000 });
   masquer(page.url());
   await attendre(page, async () => !!(await cleSemaine(page)));
+  await pageStable(page);
 }
 
 async function semaineSuivante(page) {
@@ -119,6 +137,7 @@ async function semaineSuivante(page) {
   if (!(await btnSuivant(page).count())) return false;
   await btnSuivant(page).click();
   await attendre(page, async () => { const k = await cleSemaine(page); return k && k !== avant; });
+  await pageStable(page);
   return true;
 }
 
@@ -129,55 +148,84 @@ async function allerASemaine(page, k) {
 
 async function lireDetailEvt(page, evt, cle) {
   await page.locator(`a[href*="ViewEvt(${evt})"]`).first().click();
-  await attendre(page, async () => (await btnRetour(page).count()) > 0, 20000);
+  await attendre(page, async () => (await page.evaluate(() => document.readyState === 'complete'))
+    && (await btnRetour(page).count()) > 0, 20000);
+  await pageStable(page);
   const d = await page.evaluate(lireDetail);
   await btnRetour(page).click();
   await attendre(page, async () => (await cleSemaine(page)) === cle, 20000);
+  await pageStable(page);
   return d;
 }
 
 // ------------------------------------------------------------ lecture complète
-async function lirePlanning(page) {
+let echecsDetailTotal = 0;   // au-delà de 8, on arrête d'ouvrir les détails (site trop lent)
+
+// Lit la semaine affichée (la k-ième) avec le détail de chaque cours
+async function lireUneSemaine(page, k) {
+  const cle = await cleSemaine(page);
+  const s = await page.evaluate(lireSemaine);
+  const dFin = finDeSemaine(s.range);
+  if (!dFin) throw new Error(`En-tête de semaine illisible : « ${s.range} »`);
+  console.log(`Semaine ${s.num} (${s.range}) : ${s.rows.length} créneau(x)`);
+
+  const evts = [];
+  let echecs = 0;
+  for (const row of s.rows) {
+    const e = analyserLigne(row, dFin);
+    if (!e.date) throw new Error(`Jour illisible : « ${row.day} » (${s.range})`);
+    if (DETAILS && row.evt !== null && echecs === 0 && echecsDetailTotal < 8) {
+      try {
+        const { lignes, entete } = await lireDetailEvt(page, row.evt, cle);
+        const d = analyserDetail(lignes, entete);
+        // On ne garde le détail que s'il correspond bien au créneau
+        if (d && d.date === e.date && d.start === e.start) {
+          for (const k2 of ['teacher', 'centre', 'category', 'group', 'ue', 'session', 'sessions', 'notes']) {
+            if (d[k2] !== undefined && d[k2] !== '') e[k2] = d[k2];
+          }
+        }
+      } catch (err) {
+        echecs++;
+        echecsDetailTotal++;
+        console.warn(`  ⚠️  détail ${row.evt} illisible (${err.message})`);
+        await allerASemaine(page, k);
+      }
+    }
+    delete e._evt;
+    evts.push(e);
+  }
+  return { s, dFin, evts, echecs };
+}
+
+async function lirePlanning(page, anciens) {
   await ouvrir(page);
   const events = [];
-  let debut = null, fin = null, echecsDetail = 0;
+  const incertaines = [];
+  let debut = null, fin = null;
 
   for (let k = 0; k < SEMAINES; k++) {
-    const cle = await cleSemaine(page);
-    const s = await page.evaluate(lireSemaine);
-    const dFin = finDeSemaine(s.range);
-    if (!dFin) throw new Error(`En-tête de semaine illisible : « ${s.range} »`);
-    const lundi = ajouterJours(dFin, -6);
-    if (!debut) debut = iso(lundi);
-    fin = iso(dFin);
-    console.log(`Semaine ${s.num} (${s.range}) : ${s.rows.length} créneau(x)`);
-
-    for (const row of s.rows) {
-      const e = analyserLigne(row, dFin);
-      if (!e.date) throw new Error(`Jour illisible : « ${row.day} » (${s.range})`);
-      if (DETAILS && row.evt !== null && echecsDetail < 5) {
-        try {
-          const { lignes, entete } = await lireDetailEvt(page, row.evt, cle);
-          const d = analyserDetail(lignes, entete);
-          // On ne garde le détail que s'il correspond bien au créneau
-          if (d && d.date === e.date && d.start === e.start) {
-            for (const k2 of ['teacher', 'centre', 'category', 'group', 'ue', 'session', 'sessions', 'notes']) {
-              if (d[k2] !== undefined && d[k2] !== '') e[k2] = d[k2];
-            }
-          }
-        } catch (err) {
-          echecsDetail++;
-          console.warn(`  ⚠️  détail ${row.evt} illisible (${err.message}) — on continue`);
-          await allerASemaine(page, k);
-        }
-      }
-      delete e._evt;
-      events.push(e);
+    let lecture, lundi, dimanche, avant = 0;
+    for (let essai = 1; ; essai++) {
+      lecture = await lireUneSemaine(page, k);
+      lundi = iso(ajouterJours(lecture.dFin, -6));
+      dimanche = iso(lecture.dFin);
+      // Une semaine qui perd d'un coup plus de la moitié de ses cours est relue pour confirmation
+      avant = anciens.filter((e) => e.date >= lundi && e.date <= dimanche).length;
+      const chute = avant >= 4 && lecture.evts.length < avant / 2;
+      if ((!lecture.echecs && !chute) || essai >= 3) break;
+      console.warn(`  ↻ semaine relue (${lecture.echecs ? 'détail illisible' : `${avant} → ${lecture.evts.length} créneaux`}), essai ${essai + 1}/3`);
+      await pause(3000 * essai);
+      await allerASemaine(page, k);
     }
+    // Détail toujours illisible ET nombre de cours différent : lecture douteuse
+    if (lecture.echecs && lecture.evts.length !== avant) incertaines.push({ from: lundi, to: dimanche });
+    if (!debut) debut = lundi;
+    fin = dimanche;
+    events.push(...lecture.evts);
     if (k < SEMAINES - 1 && !(await semaineSuivante(page))) break;
   }
   events.sort((a, b) => (a.date + a.start).localeCompare(b.date + b.start));
-  return { events: attribuerIds(events), debut, fin };
+  return { events: attribuerIds(events), debut, fin, incertaines };
 }
 
 // ------------------------------------------------------------ fichiers
@@ -246,7 +294,7 @@ async function main() {
   const fPlanning = path.join(DATA, 'planning.json');
   const fChanges = path.join(DATA, 'changes.json');
   const ancien = await lireJson(fPlanning, null);
-  const historique = await lireJson(fChanges, []);
+  let historique = await lireJson(fChanges, []);
 
   const navigateur = await chromium.launch();
   const page = await navigateur.newPage({ locale: 'fr-FR', timezoneId: 'Europe/Paris' });
@@ -255,7 +303,7 @@ async function main() {
     let derniereErreur;
     for (let essai = 1; essai <= 3 && !resultat; essai++) {
       try {
-        resultat = await lirePlanning(page);
+        resultat = await lirePlanning(page, ancien?.events || []);
       } catch (err) {
         derniereErreur = err;
         console.warn(`Essai ${essai} échoué : ${err.message}`);
@@ -272,8 +320,19 @@ async function main() {
     await navigateur.close();
   }
 
-  const { events, debut, fin } = resultat;
+  const { debut, fin, incertaines } = resultat;
+  let { events } = resultat;
   console.log(`${events.length} créneaux lus du ${debut} au ${fin}`);
+
+  // Semaine restée illisible après 3 essais : on garde la version précédente plutôt que
+  // d'annoncer de fausses suppressions (elle sera relue au prochain passage)
+  for (const w of incertaines) {
+    const anciensSemaine = (ancien?.events || []).filter((e) => e.date >= w.from && e.date <= w.to);
+    if (!anciensSemaine.length) continue;
+    console.warn(`⚠️  Semaine du ${dateLisible(w.from)} mal lue : on garde la version précédente.`);
+    events = events.filter((e) => e.date < w.from || e.date > w.to).concat(anciensSemaine);
+  }
+  events.sort((a, b) => (a.date + a.start).localeCompare(b.date + b.start));
 
   // Si le détail d'un cours n'a pas pu être lu, on reprend celui de la version précédente
   const parId = new Map((ancien?.events || []).map((e) => [e.id, e]));
@@ -305,9 +364,18 @@ async function main() {
     changes = comparer(ancien.events || [], events, from, to);
   }
 
+  // Un cours annoncé « supprimé » récemment qui réapparaît à l'identique = lecture ratée
+  const correction = annulerFaussesSuppressions(changes, historique);
+  changes = correction.changes;
+  historique = correction.historique;
+  const corriges = correction.corriges;
+  if (corriges) console.log(`🧹 ${corriges} fausse(s) suppression(s) annulée(s) (cours revenus à l'identique).`);
+
   const maintenant = new Date().toISOString();
   const identique = ancien && JSON.stringify(ancien.events) === JSON.stringify(tous)
     && ancien.windowStart === debut && ancien.windowEnd === fin;
+
+  if (corriges) await ecrireJson(fChanges, historique.slice(0, 200));
 
   if (identique) {
     console.log('Aucun changement.');
@@ -317,7 +385,8 @@ async function main() {
   const planning = {
     source: 'Cnam Grand Est',
     updatedAt: maintenant,
-    lastChangeAt: changes.length ? maintenant : (ancien?.lastChangeAt || null),
+    lastChangeAt: changes.length ? maintenant
+      : corriges ? (historique[0]?.at || null) : (ancien?.lastChangeAt || null),
     windowStart: debut,
     windowEnd: fin,
     events: tous,
@@ -347,7 +416,7 @@ async function main() {
       texte: `Suivi du planning Cnam activé : ${events.length} créneaux lus.\n${PAGE_URL}`,
     });
   } else {
-    console.log('Nouvelles semaines ajoutées, pas de modification à signaler.');
+    console.log(corriges ? 'Planning rétabli, rien à signaler.' : 'Nouvelles semaines ajoutées, pas de modification à signaler.');
   }
 }
 
