@@ -10,13 +10,17 @@ function vueSemaine(el) {
   for (let i = 0; i < nbJours; i++) {
     const d = addDays(lun, i), iso = dISO(d);
     const jour = semaine.filter((e) => e.date === iso).sort((a, b) => a.start.localeCompare(b.start) || (a._ghost ? 1 : -1));
-    const cls = ['day', iso === auj && 'today', iso < auj && 'past', !jour.length && 'empty-mobile'].filter(Boolean).join(' ');
+    // jour de semaine sans aucun cours au Cnam (même masqué) = jour en entreprise
+    const ent = !jour.length && i < 5 && !S.data.events.some((e) => e.date === iso);
+    const cls = ['day', iso === auj && 'today', iso < auj && 'past', !jour.length && !ent && 'empty-mobile', ent && 'entday'].filter(Boolean).join(' ');
     html += `<div class="${cls}"><div class="dh"><span class="dn">${d.getDate()}</span><span class="dw">${JOURS[d.getDay()]}</span>${iso === auj ? '<span class="today-tag">Aujourd\'hui</span>' : ''}</div>
-      ${jour.length ? jour.map((e) => carte(e)).join('') : '<div class="empty-day">Pas de cours</div>'}</div>`;
+      ${jour.length ? jour.map((e) => carte(e)).join('') : ent ? '<div class="empty-day ent">🏭 Entreprise</div>' : '<div class="empty-day">Pas de cours</div>'}</div>`;
   }
   html += '</div>';
   const connu = parseISO(S.data.windowEnd);
+  const reels = S.data.events.filter((e) => { const d = parseISO(e.date); return d >= lun && d < fin; });
   if (lun > connu) html = `<div class="placeholder"><h3>Semaine pas encore publiée</h3><p>Le planning est connu jusqu'au ${esc(dateLongue(S.data.windowEnd))}.</p></div>`;
+  else if (!reels.length) html = semaineEntreprise(lun);
   else if (!semaine.length) html += `<p style="text-align:center;color:var(--ink3);margin-top:16px">Aucun cours cette semaine 🎉</p>`;
   el.innerHTML = html;
 }
@@ -27,10 +31,14 @@ function vueListe(el) {
   if (!ev.length) { el.innerHTML = '<div class="placeholder"><h3>Rien à venir</h3></div>'; return; }
   const jours = new Map();
   ev.forEach((e) => (jours.get(e.date) || jours.set(e.date, []).get(e.date)).push(e));
-  let html = '<div class="list">', sem = null;
+  let html = '<div class="list">', sem = null, lunPrec = null;
   for (const [d, liste] of jours) {
     const w = isoWeek(parseISO(d));
-    if (w !== sem) { sem = w; html += `<div class="weeksep">Semaine ${w}</div>`; }
+    const lun = dISO(monday(parseISO(d)));
+    if (w !== sem) {
+      if (lunPrec) html += separateurEntreprise(lunPrec, lun);
+      sem = w; lunPrec = lun; html += `<div class="weeksep">Semaine ${w}</div>`;
+    }
     const total = liste.reduce((s, e) => s + (endOf(e) - startOf(e)) / 36e5, 0);
     html += `<div class="lday"><h3>${esc(dateLongue(d))}<span>${liste.length} créneau${liste.length > 1 ? 'x' : ''} · ${String(total).replace('.', ',')} h</span></h3><div class="items">${liste.map((e) => carte(e)).join('')}</div></div>`;
   }
@@ -103,16 +111,22 @@ function ouvrir(id, ghost) {
 /* ================================================================ interactions */
 function choisirOnglet(t) {
   S.tab = t;
+  if (S.q) { S.q = ''; $('#q').value = ''; }
   document.querySelectorAll('.tab').forEach((b) => b.setAttribute('aria-selected', b.dataset.tab === t));
   rendreChips(); rendreVue();
   window.scrollTo({ top: $('#tabs').offsetTop - 20, behavior: 'smooth' });
 }
 document.querySelectorAll('.tab').forEach((b) => (b.onclick = () => choisirOnglet(b.dataset.tab)));
-$('#prev').onclick = () => { S.week = addDays(S.week, -7); rendreVue(); };
-$('#next').onclick = () => { S.week = addDays(S.week, 7); rendreVue(); };
-$('#todayBtn').onclick = () => { S.week = monday(new Date()); rendreVue(); };
+const decaler = (n) => { if (S.tab === 'month') S.month = addMonths(S.month, n); else S.week = addDays(S.week, 7 * n); rendreVue(); };
+$('#prev').onclick = () => decaler(-1);
+$('#next').onclick = () => decaler(1);
+$('#todayBtn').onclick = () => {
+  const d = new Date();
+  if (S.tab === 'month') S.month = new Date(d.getFullYear(), d.getMonth(), 1); else S.week = monday(d);
+  rendreVue();
+};
 document.addEventListener('keydown', (e) => {
-  if (S.tab !== 'week' || $('#dlg').open || e.target.tagName === 'INPUT') return;
+  if (!['week', 'month'].includes(S.tab) || S.q || $('#dlg').open || e.target.tagName === 'INPUT') return;
   if (e.key === 'ArrowLeft') $('#prev').click();
   if (e.key === 'ArrowRight') $('#next').click();
 });
@@ -124,7 +138,7 @@ const icsUrl = new URL('planning.ics', location.href);
 $('#ics').href = location.protocol === 'https:' ? icsUrl.href.replace(/^https:/, 'webcal:') : icsUrl.href;
 $('#foot').innerHTML = `Abonnement agenda : <a href="${esc(icsUrl.href)}">${esc(icsUrl.href)}</a>`;
 
-charger();
+setTimeout(charger);   // après le chargement de extras.js
 setInterval(() => { rendreHero(); if (S.tab !== 'changes') rendreVue(); }, 60000);   // compte à rebours
 setInterval(charger, 5 * 60000);                                                   // nouvelles données
 document.addEventListener('visibilitychange', () => { if (!document.hidden) charger(); });
