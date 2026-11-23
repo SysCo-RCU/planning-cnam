@@ -77,22 +77,23 @@
 
   // en ligne : un signal par appareil et par tranche de 2 min, tant que la page est visible
   const tranche = () => Math.floor(Date.now() / TRANCHE);
+  // le service répond parfois « réessayez plus tard » : une lecture ratée ne bloque pas le reste
+  const sur = (p) => p.catch(() => null);
   async function enLigne() {
     const t = tranche();
-    try {
-      let cur;
-      if (!moi && document.visibilityState === 'visible' && mem.get('cnam-enligne') !== String(t)) {
-        mem.set('cnam-enligne', String(t));
-        cur = await hit(`enligne-${t}`);
-      } else cur = await get(`enligne-${t}`);
-      const prec = await get(`enligne-${t - 1}`);
-      // la tranche en cours se remplit au fil des signaux : on garde la plus haute des deux
-      val.enligne = Math.max(cur, prec, moi ? 0 : 1);
-      // relecture des totaux (au cas où le flux en direct n'est pas disponible)
-      if (val.vues != null) val.vues = Math.max(val.vues, await get('vues'));
-      if (val.personnes != null) val.personnes = Math.max(val.personnes, await get('personnes'));
-      afficher();
-    } catch { /* service injoignable : on n'affiche pas « en ligne » */ }
+    let cur;
+    if (!moi && document.visibilityState === 'visible' && mem.get('cnam-enligne') !== String(t)) {
+      cur = await sur(hit(`enligne-${t}`));
+      if (cur != null) mem.set('cnam-enligne', String(t));
+    } else cur = await sur(get(`enligne-${t}`));
+    const prec = await sur(get(`enligne-${t - 1}`));
+    // la tranche en cours se remplit au fil des signaux : on garde la plus haute des deux
+    if (cur != null || prec != null) val.enligne = Math.max(cur || 0, prec || 0, moi ? 0 : 1);
+    // relecture des totaux (au cas où le flux en direct n'est pas disponible)
+    const v = await sur(get('vues')), p = await sur(get('personnes'));
+    if (v != null) val.vues = Math.max(val.vues || 0, v);
+    if (p != null) val.personnes = Math.max(val.personnes || 0, p);
+    afficher();
   }
   enLigne();
   setInterval(() => { if (document.visibilityState === 'visible') enLigne(); }, 30000);
