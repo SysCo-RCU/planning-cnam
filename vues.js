@@ -10,16 +10,20 @@ function vueSemaine(el) {
   for (let i = 0; i < nbJours; i++) {
     const d = addDays(lun, i), iso = dISO(d);
     const jour = semaine.filter((e) => e.date === iso).sort((a, b) => a.start.localeCompare(b.start) || (a._ghost ? 1 : -1));
-    // jour de semaine sans aucun cours au Cnam (même masqué) = jour en entreprise
-    const ent = !jour.length && i < 5 && !S.data.events.some((e) => e.date === iso);
-    const cls = ['day', iso === auj && 'today', iso < auj && 'past', !jour.length && !ent && 'empty-mobile', ent && 'entday'].filter(Boolean).join(' ');
+    // jour sans cours : entreprise ou férié d'après le calendrier officiel
+    const st = jour.length || S.data.events.some((e) => e.date === iso) ? 'cnam' : statutJour(iso);
+    const lib = !jour.length && LIB_JOUR[st];
+    const cls = ['day', iso === auj && 'today', iso < auj && 'past', !jour.length && !lib && 'empty-mobile'].filter(Boolean).join(' ');
     html += `<div class="${cls}"><div class="dh"><span class="dn">${d.getDate()}</span><span class="dw">${JOURS[d.getDay()]}</span>${iso === auj ? '<span class="today-tag">Aujourd\'hui</span>' : ''}</div>
-      ${jour.length ? jour.map((e) => carte(e)).join('') : ent ? '<div class="empty-day ent">🏭 Entreprise</div>' : '<div class="empty-day">Pas de cours</div>'}</div>`;
+      ${jour.length ? jour.map((e) => carte(e)).join('') : lib ? `<div class="empty-day ${st}">${lib}</div>` : '<div class="empty-day">Pas de cours</div>'}</div>`;
   }
   html += '</div>';
   const connu = parseISO(S.data.windowEnd);
   const reels = S.data.events.filter((e) => { const d = parseISO(e.date); return d >= lun && d < fin; });
-  if (lun > connu) html = `<div class="placeholder"><h3>Semaine pas encore publiée</h3><p>Le planning est connu jusqu'au ${esc(dateLongue(S.data.windowEnd))}.</p></div>`;
+  const info = infoSemaine(lun);
+  if (!reels.length && info?.type === 'entreprise') html = semaineEntreprise(lun);
+  else if (!reels.length && info) html = semaineCnamVide(lun, lun > connu);
+  else if (lun > connu) html = `<div class="placeholder"><h3>Semaine pas encore publiée</h3><p>Le planning est connu jusqu'au ${esc(dateLongue(S.data.windowEnd))}.</p></div>`;
   else if (!reels.length) html = semaineEntreprise(lun);
   else if (!semaine.length) html += `<p style="text-align:center;color:var(--ink3);margin-top:16px">Aucun cours cette semaine 🎉</p>`;
   el.innerHTML = html;
