@@ -36,9 +36,19 @@
   }
 
   // lit {value} ; une clé qui n'existe pas encore vaut 0
-  const lire = (route, cle) => fetch(`${API}/${route}/${NS}/${cle}`, { cache: 'no-store' })
-    .then((r) => (r.ok ? r.json() : r.status === 404 ? { value: 0 } : Promise.reject(r.status)))
-    .then((j) => Math.max(0, Number(j.value) || 0));
+  // (pas d'option « cache » : sur iPhone elle peut déclencher une requête préalable refusée ;
+  //  le paramètre t suffit à éviter le cache)
+  const erreurs = [];
+  const lire = (route, cle) => fetch(`${API}/${route}/${NS}/${cle}?t=${Date.now()}`)
+    .then((r) => (r.ok ? r.json() : r.status === 404 ? { value: 0 } : Promise.reject(new Error(`HTTP ${r.status}`))))
+    .then((j) => Math.max(0, Number(j.value) || 0))
+    .catch((e) => { erreurs.push(`${route} ${cle} : ${e && e.message || e}`); throw e; });
+  // ?debug : affiche la raison si le compteur ne peut pas se charger
+  if (params.has('debug')) setTimeout(() => {
+    if (!el.hidden) return;
+    el.textContent = `Compteur indisponible — ${erreurs[0] || 'aucune réponse'}`;
+    el.hidden = false;
+  }, 6000);
   const hit = (cle) => lire('hit', cle);
   const get = (cle) => lire('get', cle);
 
