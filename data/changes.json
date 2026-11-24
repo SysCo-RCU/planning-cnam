@@ -1,5 +1,40 @@
 [
   {
+    "at": "2026-11-24T09:20:21.018Z",
+    "changes": [
+      {
+        "kind": "added",
+        "after": {
+          "id": "2027-01-27T09:00|USR24K|Innovation et Intelligence stragétique",
+          "date": "2027-01-27",
+          "start": "09:00",
+          "end": "12:30",
+          "code": "USR24K",
+          "title": "Innovation et Intelligence stragétique",
+          "type": "Cours Transition",
+          "room": "Salle 13",
+          "teacher": "M GARENC Philippe",
+          "exam": false
+        }
+      },
+      {
+        "kind": "added",
+        "after": {
+          "id": "2027-01-27T13:30|USR24K|Innovation et Intelligence stragétique",
+          "date": "2027-01-27",
+          "start": "13:30",
+          "end": "17:00",
+          "code": "USR24K",
+          "title": "Innovation et Intelligence stragétique",
+          "type": "Cours Transition",
+          "room": "Salle 13",
+          "teacher": "M GARENC Philippe",
+          "exam": false
+        }
+      }
+    ]
+  },
+  {
     "at": "2026-11-23T16:52:51.319Z",
     "changes": [
       {
