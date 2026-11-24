@@ -1,5 +1,80 @@
 [
   {
+    "at": "2026-11-24T10:27:41.584Z",
+    "changes": [
+      {
+        "kind": "modified",
+        "before": {
+          "id": "2026-12-02T09:00|USEG06|Energie électrique",
+          "date": "2026-12-02",
+          "start": "09:00",
+          "end": "12:30",
+          "code": "USEG06",
+          "title": "Energie électrique",
+          "type": "TPAE",
+          "room": "Salle 106",
+          "teacher": "Mme SCOLARITÉ Surveillant.e",
+          "exam": false
+        },
+        "after": {
+          "id": "2026-12-02T09:00|USEG06|Energie électrique",
+          "date": "2026-12-02",
+          "start": "09:00",
+          "end": "12:30",
+          "code": "USEG06",
+          "title": "Energie électrique",
+          "type": "TPAE",
+          "room": "Pas de salle disponible - salle à Nancy impératif",
+          "teacher": "Mme SCOLARITÉ Surveillant.e",
+          "exam": false
+        },
+        "fields": [
+          {
+            "field": "room",
+            "label": "Salle",
+            "old": "Salle 106",
+            "new": "Pas de salle disponible - salle à Nancy impératif"
+          }
+        ]
+      },
+      {
+        "kind": "modified",
+        "before": {
+          "id": "2026-12-02T13:30|USEG06|Energie électrique",
+          "date": "2026-12-02",
+          "start": "13:30",
+          "end": "17:00",
+          "code": "USEG06",
+          "title": "Energie électrique",
+          "type": "Cours",
+          "room": "Salle 106",
+          "teacher": "M REBAA El-Hadi",
+          "exam": false
+        },
+        "after": {
+          "id": "2026-12-02T13:30|USEG06|Energie électrique",
+          "date": "2026-12-02",
+          "start": "13:30",
+          "end": "17:00",
+          "code": "USEG06",
+          "title": "Energie électrique",
+          "type": "Cours",
+          "room": "Pas de salle disponible - salle à Nancy impératif",
+          "teacher": "M REBAA El-Hadi",
+          "exam": false
+        },
+        "fields": [
+          {
+            "field": "room",
+            "label": "Salle",
+            "old": "Salle 106",
+            "new": "Pas de salle disponible - salle à Nancy impératif"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "at": "2026-11-24T09:20:21.018Z",
     "changes": [
       {
