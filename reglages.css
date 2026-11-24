@@ -51,13 +51,13 @@ html.compact .list{gap:14px}
 @media (max-width:560px){#reglagesBtn span{display:none}#reglagesBtn{padding:8px 10px}}
 
 /* ---------- fenêtre des réglages */
-dialog.regl{width:min(520px,calc(100vw - 24px));max-height:min(88vh,860px);max-height:min(88dvh,860px);display:none;flex-direction:column;overflow:hidden}
+dialog.regl{width:min(520px,calc(100vw - 24px));height:auto;max-height:min(88vh,860px);max-height:min(88dvh,860px);display:none;flex-direction:column;overflow:hidden}
 dialog.regl[open]{display:flex}
-.rg-top{display:flex;align-items:center;gap:12px;padding:18px 20px 14px;border-bottom:1px solid var(--line)}
+.rg-top{flex:none;display:flex;align-items:center;gap:12px;padding:18px 20px 14px;border-bottom:1px solid var(--line)}
 .rg-top h2{flex:1;font-family:var(--display);font-size:22px;letter-spacing:-.01em}
 .rg-top .ib{width:44px;height:44px}
 .rg-top .ib svg{width:20px;height:20px}
-.rg-body{flex:1;overflow-y:auto;padding:6px 20px 10px;-webkit-overflow-scrolling:touch}
+.rg-body{flex:1 1 auto;min-height:0;overflow-y:auto;padding:6px 20px 10px;-webkit-overflow-scrolling:touch}
 .rg-body section{padding:14px 0;border-bottom:1px solid var(--line)}
 .rg-body section:last-child{border-bottom:0}
 .rg-body h3{font-size:11.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
@@ -95,7 +95,7 @@ dialog.regl[open]{display:flex}
 .tg input:checked::before{transform:translateX(18px);background:#fff}
 .tg input:focus-visible{outline:2px solid var(--red);outline-offset:2px}
 
-.rg-foot{display:flex;align-items:center;gap:10px;padding:12px 20px;padding-bottom:max(12px,env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--card)}
+.rg-foot{flex:none;display:flex;align-items:center;gap:10px;padding:12px 20px;padding-bottom:max(12px,env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--card)}
 .rg-foot small{flex:1;color:var(--ink3);font-size:12px}
 .rg-foot .btn{min-height:44px}
 .rg-body .btn{min-height:44px}
