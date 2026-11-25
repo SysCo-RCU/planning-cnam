@@ -1,5 +1,45 @@
 [
   {
+    "at": "2026-11-25T10:11:25.988Z",
+    "changes": [
+      {
+        "kind": "modified",
+        "before": {
+          "id": "2026-11-25T09:00|USEG06|Energie électrique",
+          "date": "2026-11-25",
+          "start": "09:00",
+          "end": "12:30",
+          "code": "USEG06",
+          "title": "Energie électrique",
+          "type": "Cours",
+          "room": "Salle 106",
+          "teacher": "M REBAA El-Hadi",
+          "exam": false
+        },
+        "after": {
+          "id": "2026-11-25T09:00|USEG06|Energie électrique",
+          "date": "2026-11-25",
+          "start": "09:00",
+          "end": "12:30",
+          "code": "USEG06",
+          "title": "Energie électrique",
+          "type": "TPAE",
+          "room": "Salle 106",
+          "teacher": "M REBAA El-Hadi",
+          "exam": false
+        },
+        "fields": [
+          {
+            "field": "type",
+            "label": "Type",
+            "old": "Cours",
+            "new": "TPAE"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "at": "2026-11-24T10:27:41.584Z",
     "changes": [
       {
