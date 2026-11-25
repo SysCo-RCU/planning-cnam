@@ -13,8 +13,8 @@
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const CLE_SECRET = 'planning-cnam:cle-sondages', CLE_MIENS = 'planning-cnam:mes-docs', CLE_CODE = 'planning-cnam:code-docs';
   const MAX_DEFAUT = 20 * 1024 * 1024;
-  const EXT = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'xlsm', 'ppt', 'pptx', 'odt', 'ods', 'odp', 'rtf', 'txt', 'csv', 'md',
-    'png', 'jpg', 'jpeg', 'gif', 'webp', 'heic', 'zip', '7z', 'rar', 'py', 'm', 'ipynb', 'mat', 'dwg', 'dxf', 'step', 'stp'];
+  const EXT = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'odt', 'ods', 'odp', 'rtf', 'txt', 'csv', 'md',
+    'png', 'jpg', 'jpeg', 'gif', 'webp', 'heic', 'py', 'm', 'ipynb', 'mat', 'dwg', 'dxf', 'step', 'stp'];
   let serveur = '', docs, actif = false, max = MAX_DEFAUT, chargement = null, formOuvert = false, filtre = '';
   let miens = lireJSON(CLE_MIENS, []) || [];
 
@@ -92,7 +92,7 @@
 
   const ERREURS = {
     code: ['Code de la promo incorrect.', 'Wrong class code.'],
-    type: ['Ce type de fichier n\'est pas accepté (PDF, Word, Excel, PowerPoint, images, zip…).', 'This file type is not accepted (PDF, Word, Excel, PowerPoint, images, zip…).'],
+    type: ['Ce type de fichier n\'est pas accepté (PDF, Word, Excel, PowerPoint, images…).', 'This file type is not accepted (PDF, Word, Excel, PowerPoint, images…).'],
     taille: ['Fichier trop lourd : 20 Mo maximum.', 'File too large: 20 MB maximum.'],
     vite: ['Trop de dépôts en peu de temps, réessaie dans une heure.', 'Too many uploads recently, try again in an hour.'],
     plein: ['L\'espace est plein, contacte Amine.', 'The space is full, contact Amine.'],
@@ -108,7 +108,7 @@
     return `<form class="sdf dcf" novalidate>
       <h3>${tx('Déposer des fichiers', 'Upload files')}</h3>
       <label class="dcf-zone"><input type="file" name="fichiers" multiple accept="${EXT.map((e) => '.' + e).join(',')}">
-        <span class="dcf-choix">${ICONE_PLUS}<b>${tx('Choisir des fichiers', 'Choose files')}</b><small>${tx('PDF, Word, Excel, PowerPoint, images, zip… · 20 Mo max par fichier', 'PDF, Word, Excel, PowerPoint, images, zip… · 20 MB max per file')}</small></span></label>
+        <span class="dcf-choix">${ICONE_PLUS}<b>${tx('Choisir des fichiers', 'Choose files')}</b><small>${tx('PDF, Word, Excel, PowerPoint, images… · 20 Mo max par fichier', 'PDF, Word, Excel, PowerPoint, images… · 20 MB max per file')}</small></span></label>
       <ul class="dcf-liste"></ul>
       <div class="sdf-ligne">
         <label>${tx('Code de la promo', 'Class code')}<input name="codepromo" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="${tx('Demande-le à Amine', 'Ask Amine')}"></label>
