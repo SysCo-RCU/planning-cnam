@@ -1,5 +1,25 @@
 [
   {
+    "at": "2026-11-25T20:09:49.085Z",
+    "changes": [
+      {
+        "kind": "added",
+        "after": {
+          "id": "2026-11-27T09:00|USEG06|Modélisation numérique",
+          "date": "2026-11-27",
+          "start": "09:00",
+          "end": "12:30",
+          "code": "USEG06",
+          "title": "Modélisation numérique",
+          "type": "TPAE",
+          "room": "Salle 106",
+          "teacher": "Mme SCOLARITÉ Surveillant.e",
+          "exam": false
+        }
+      }
+    ]
+  },
+  {
     "at": "2026-11-25T10:11:25.988Z",
     "changes": [
       {

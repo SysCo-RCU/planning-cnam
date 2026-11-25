@@ -1,7 +1,7 @@
 {
   "source": "Cnam Grand Est",
-  "updatedAt": "2026-11-25T10:11:25.988Z",
-  "lastChangeAt": "2026-11-25T10:11:25.988Z",
+  "updatedAt": "2026-11-25T20:09:49.085Z",
+  "lastChangeAt": "2026-11-25T20:09:49.085Z",
   "windowStart": "2026-11-23",
   "windowEnd": "2027-04-11",
   "events": [
@@ -204,7 +204,7 @@
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
       "session": 18,
-      "sessions": 26
+      "sessions": 27
     },
     {
       "id": "2026-11-23T13:30|USEG06|Résistance des matériaux",
@@ -222,7 +222,7 @@
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
       "session": 19,
-      "sessions": 26
+      "sessions": 27
     },
     {
       "id": "2026-11-24T09:00|USEG07|Turbomachines",
@@ -276,7 +276,7 @@
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
       "session": 20,
-      "sessions": 26
+      "sessions": 27
     },
     {
       "id": "2026-11-25T13:30|USEG07|Turbomachines",
@@ -333,6 +333,24 @@
       "sessions": 74
     },
     {
+      "id": "2026-11-27T09:00|USEG06|Modélisation numérique",
+      "date": "2026-11-27",
+      "start": "09:00",
+      "end": "12:30",
+      "code": "USEG06",
+      "title": "Modélisation numérique",
+      "type": "TPAE",
+      "exam": false,
+      "room": "Salle 106",
+      "teacher": "Mme SCOLARITÉ Surveillant.e",
+      "centre": "Centre de Nancy",
+      "category": "TPAE",
+      "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
+      "ue": "Sciences S7",
+      "session": 21,
+      "sessions": 27
+    },
+    {
       "id": "2026-11-27T13:30|USEG06|Modélisation numérique",
       "date": "2026-11-27",
       "start": "13:30",
@@ -347,8 +365,8 @@
       "category": "Contrôle continu",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
-      "session": 21,
-      "sessions": 26,
+      "session": 22,
+      "sessions": 27,
       "notes": "Composition en présentiel"
     },
     {
@@ -402,8 +420,8 @@
       "category": "Contrôle continu",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
-      "session": 22,
-      "sessions": 26,
+      "session": 23,
+      "sessions": 27,
       "notes": "Composition en présentiel"
     },
     {
@@ -439,8 +457,8 @@
       "category": "TPAE",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
-      "session": 23,
-      "sessions": 26,
+      "session": 24,
+      "sessions": 27,
       "notes": "Thématique : Réunion Promo"
     },
     {
@@ -458,8 +476,8 @@
       "category": "Cours",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
-      "session": 24,
-      "sessions": 26,
+      "session": 25,
+      "sessions": 27,
       "notes": "Thématique : Réunion Promo"
     },
     {
@@ -477,8 +495,8 @@
       "category": "Cours",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
-      "session": 25,
-      "sessions": 26,
+      "session": 26,
+      "sessions": 27,
       "notes": "Thématique : Réunion Promo"
     },
     {
@@ -533,8 +551,8 @@
       "category": "Cours",
       "group": "2025/2028-ALT-Nancy-ING3600A Annuel",
       "ue": "Sciences S7",
-      "session": 26,
-      "sessions": 26,
+      "session": 27,
+      "sessions": 27,
       "notes": "Thématique : Réunion Promo"
     },
     {
