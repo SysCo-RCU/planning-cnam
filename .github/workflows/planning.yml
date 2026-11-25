@@ -49,8 +49,7 @@ jobs:
           PLANNING_URL: ${{ secrets.PLANNING_URL }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
-          # MAIL_TO : adresses de départ ; MAIL_TO_CLASSE : la promo (tout part en copie cachée)
-          MAIL_TO: ${{ secrets.MAIL_TO }},${{ secrets.MAIL_TO_CLASSE }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}   # toute la promo, en copie cachée
           WEEKS_AHEAD: '20'
           TEST_EMAIL: ${{ inputs.test_email }}
           PAGE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
