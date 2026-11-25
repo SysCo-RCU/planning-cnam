@@ -7,6 +7,8 @@
   const html = document.documentElement;
   const tx = (fr, en) => (html.lang === 'en' ? en : fr);
   const TITRE = document.title;
+  // lancé depuis l'icône de l'écran d'accueil (pas d'impression ni d'ouverture de lien possible)
+  const APPLI = navigator.standalone === true || matchMedia('(display-mode: standalone)').matches;
 
   const style = document.createElement('style');
   style.textContent = `
@@ -127,7 +129,7 @@ html.pdfx .mnote{display:none}
     tete.append(h, p);
     const paysage = !S.q && ['week', 'month'].includes(S.tab);
     page.textContent = `@page{size:A4 ${paysage ? 'landscape' : 'portrait'};margin:10mm}`;
-    const nom = `Planning Cnam - ${onglet}${periode ? ` - ${periode}` : ''}`.replace(/[\\/:*?"<>|«»“”.]/g, '').replace(/[–—]/g, '-').replace(/[\s   ]+/g, ' ').trim();
+    const nom = `Planning Cnam - ${onglet}${periode ? ` - ${periode}` : ''}`.replace(/[\\/:*?"<>|«»“”.]/g, '').replace(/[–—]/g, '-').replace(/\s+/g, ' ').trim();
     return { paysage, nom };
   }
 
@@ -220,23 +222,37 @@ html.pdfx .mnote{display:none}
     const actions = document.createElement('div');
     actions.className = 'pdfa';
     const fermer = () => { fond.remove(); setTimeout(() => URL.revokeObjectURL(url), 60000); };
-    if (navigator.canShare && navigator.canShare({ files: [fichier] })) {
+    const partage = !!(navigator.canShare && navigator.canShare({ files: [fichier] }));
+    if (partage) {
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'btn';
       b.textContent = tx('Enregistrer / partager', 'Save / share');
       b.onclick = () => navigator.share({ files: [fichier], title: fichier.name }).then(fermer).catch(() => {});
       actions.appendChild(b);
     }
-    const a = document.createElement('a');
-    a.className = 'btn ghost'; a.href = url; a.download = fichier.name; a.target = '_blank'; a.rel = 'noopener';
-    a.textContent = tx('Ouvrir le PDF', 'Open PDF');
-    a.onclick = () => setTimeout(fermer, 500);
+    // l'app de l'écran d'accueil (iPhone / iPad) ne sait pas ouvrir un lien vers le fichier :
+    // on y passe uniquement par « Enregistrer / partager » (Fichiers, Mail, WhatsApp…)
+    if (!(APPLI && partage)) {
+      const a = document.createElement('a');
+      a.className = 'btn ghost'; a.href = url; a.download = fichier.name; a.target = '_blank'; a.rel = 'noopener';
+      a.textContent = tx('Ouvrir le PDF', 'Open PDF');
+      a.onclick = () => setTimeout(fermer, 500);
+      actions.appendChild(a);
+    }
+    const fin = [];
+    if (APPLI && partage) {
+      const aide = document.createElement('p');
+      aide.className = 'pdfn';
+      aide.style.margin = '12px 0 0';
+      aide.textContent = tx('Puis « Enregistrer dans Fichiers », ou choisis une appli (Mail, WhatsApp…).', 'Then “Save to Files”, or pick an app (Mail, WhatsApp…).');
+      fin.push(aide);
+    }
     const x = document.createElement('button');
     x.type = 'button'; x.className = 'btn ghost';
     x.textContent = tx('Fermer', 'Close');
     x.onclick = fermer;
-    actions.append(a, x);
-    boite.append(t, n, actions);
+    actions.append(x);
+    boite.append(t, n, actions, ...fin);
     fond.appendChild(boite);
     fond.onclick = (e) => { if (e.target === fond) fermer(); };
     document.body.appendChild(fond);
@@ -263,8 +279,12 @@ html.pdfx .mnote{display:none}
       if (tactile) proposer(fichier); else telecharger(fichier);
     } catch (e) {
       console.error(e);
-      alert(tx('Impossible de créer le PDF (connexion internet ?). La fenêtre d\'impression va s\'ouvrir à la place.', 'Could not create the PDF (internet connection?). The print dialog will open instead.'));
-      try { window.print(); } catch (e2) { /* rien */ }
+      if (APPLI) {
+        alert(tx('Impossible de créer le PDF (connexion internet ?). Réessaie dans un instant.', 'Could not create the PDF (internet connection?). Please try again.'));
+      } else {
+        alert(tx('Impossible de créer le PDF (connexion internet ?). La fenêtre d\'impression va s\'ouvrir à la place.', 'Could not create the PDF (internet connection?). The print dialog will open instead.'));
+        try { window.print(); } catch (e2) { /* rien */ }
+      }
     } finally {
       enCours = false;
       bouton.disabled = false;
