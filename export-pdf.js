@@ -79,7 +79,7 @@ html.pdfx .mnote{display:none}
 
   const NOMS = {
     week: ['Semaine', 'Week'], month: ['Mois', 'Month'], list: ['À venir', 'Upcoming'], exams: ['Examens', 'Exams'],
-    ue: ['Avancement', 'Progress'], changes: ['Modifications', 'Changes'], sondages: ['Sondages', 'Polls'],
+    ue: ['Avancement', 'Progress'], changes: ['Modifications', 'Changes'], sondages: ['Sondages', 'Polls'], docs: ['Documents', 'Documents'],
   };
   const nomOnglet = () => {
     if (S.q) return `${tx('Recherche', 'Search')} « ${S.q} »`;
