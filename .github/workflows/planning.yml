@@ -102,4 +102,11 @@ jobs:
         run: |
           reste=$(( DEBUT + 570 - $(date +%s) ))
           if [ "$reste" -gt 0 ]; then echo "Attente de ${reste} s"; sleep "$reste"; fi
-          gh workflow run planning.yml --ref main
+          # GitHub répond parfois par une erreur passagère (HTTP 500) : on réessaie plusieurs fois
+          # au lieu de laisser la chaîne s'arrêter
+          for essai in 1 2 3 4 5 6; do
+            if gh workflow run planning.yml --ref main; then exit 0; fi
+            echo "Relance refusée (essai ${essai}/6), nouvel essai dans 30 s"
+            sleep 30
+          done
+          exit 1
