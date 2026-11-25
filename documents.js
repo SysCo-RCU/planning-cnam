@@ -74,17 +74,13 @@
     return chargement;
   }
 
-  // envoi en texte brut (pas de requête préalable CORS), avec suivi de la progression
-  function envoyer(donnees, progression) {
-    return new Promise((ok, ko) => {
-      const x = new XMLHttpRequest();
-      x.open('POST', serveur);
-      x.timeout = 180000;
-      x.upload.onprogress = (e) => { if (e.lengthComputable) progression(e.loaded / e.total); };
-      x.onload = () => { try { ok(JSON.parse(x.responseText)); } catch { ko(new Error('réponse')); } };
-      x.onerror = x.ontimeout = () => ko(new Error('réseau'));
-      x.send(JSON.stringify(donnees));
-    });
+  // envoi en texte brut, comme les sondages : une requête « simple », sans vérification préalable
+  // (le suivi de progression de l'envoi en déclencherait une, que le serveur Google refuse)
+  function envoyer(donnees) {
+    const ctl = typeof AbortController === 'function' ? new AbortController() : null;
+    const minuteur = ctl ? setTimeout(() => ctl.abort(), 180000) : 0;
+    return fetch(serveur, { method: 'POST', body: JSON.stringify(donnees), signal: ctl ? ctl.signal : undefined })
+      .then((r) => r.json()).finally(() => clearTimeout(minuteur));
   }
 
   const lireBase64 = (fichier) => new Promise((ok, ko) => {
@@ -115,7 +111,7 @@
         <span class="dcf-choix">${ICONE_PLUS}<b>${tx('Choisir des fichiers', 'Choose files')}</b><small>${tx('PDF, Word, Excel, PowerPoint, images, zip… · 20 Mo max par fichier', 'PDF, Word, Excel, PowerPoint, images, zip… · 20 MB max per file')}</small></span></label>
       <ul class="dcf-liste"></ul>
       <div class="sdf-ligne">
-        <label>${tx('Code de la promo', 'Class code')}<input name="code" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="${tx('Demande-le à Amine', 'Ask Amine')}"></label>
+        <label>${tx('Code de la promo', 'Class code')}<input name="codepromo" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="${tx('Demande-le à Amine', 'Ask Amine')}"></label>
         <label>${tx('Ton prénom (facultatif)', 'Your first name (optional)')}<input name="auteur" maxlength="30" autocomplete="given-name"></label>
       </div>
       <p class="sdf-info">${tx('Visible par toute personne qui a le lien de la page. Toi seul pourras retirer tes fichiers, depuis ce téléphone. Pas de documents personnels.', 'Visible to anyone with the page link. Only you can remove your files, from this phone. No personal documents.')}</p>
@@ -144,13 +140,13 @@
     f.querySelector('.sdf-annuler').onclick = () => { formOuvert = false; zone.innerHTML = ''; majBouton(); };
     f.onsubmit = async (ev) => {
       ev.preventDefault();
-      const code = f.code.value.trim();
+      const code = f.codepromo.value.trim();
       // fichiers à (r)envoyer : ni refusés d'office, ni déjà déposés
       const aEnvoyer = choisis.filter((x) => !x.bloque && x.etat !== 'ok');
       if (!aEnvoyer.length) { err.textContent = erreur('vide'); return; }
       aEnvoyer.forEach((x) => { x.etat = ''; x.texte = ''; });
       afficher();
-      if (!code) { err.textContent = erreur('code'); f.code.focus(); return; }
+      if (!code) { err.textContent = erreur('code'); f.codepromo.focus(); return; }
       bouton.disabled = true; err.textContent = '';
       const auteur = f.auteur.value.trim();
       if (auteur) mem.set('planning-cnam:prenom', auteur);
@@ -159,9 +155,8 @@
         x.etat = 'en'; x.texte = tx('préparation…', 'preparing…'); afficher();
         try {
           const b64 = await lireBase64(x.f);
-          const r = await envoyer({ a: 'deposer', code, nom: x.f.name, type: x.f.type, b64, auteur, cle: secret() }, (p) => {
-            x.texte = `${Math.round(p * 100)} %`; afficher();
-          });
+          x.texte = tx('envoi…', 'uploading…'); afficher();
+          const r = await envoyer({ a: 'deposer', code, nom: x.f.name, type: x.f.type, b64, auteur, cle: secret() });
           if (!r || !r.ok) {
             x.etat = 'ko'; x.texte = erreur(r && r.erreur);
             if (r && r.erreur === 'code') { err.textContent = erreur('code'); afficher(); break; }
@@ -177,7 +172,7 @@
       if (reussis) await lister();
       if (reussis === aEnvoyer.length) setTimeout(() => { if (zone.contains(f)) { formOuvert = false; zone.innerHTML = ''; majBouton(); } }, 1200);
     };
-    f.code.value = mem.get(CLE_CODE) || '';
+    f.codepromo.value = mem.get(CLE_CODE) || '';
     const prenom = mem.get('planning-cnam:prenom');
     if (prenom) f.auteur.value = prenom;
   }
@@ -190,7 +185,7 @@
     const d = (docs || []).find((x) => x.id === id);
     if (!d || !window.confirm(tx(`Retirer « ${d.nom} » de l'espace partagé ?`, `Remove “${d.nom}” from the shared space?`))) return;
     try {
-      const r = await envoyer({ a: 'retirer', id, cle: secret() }, () => {});
+      const r = await envoyer({ a: 'retirer', id, cle: secret() });
       if (!r || !r.ok) { window.alert(r && r.erreur === 'interdit' ? tx('Seule la personne qui a déposé ce fichier peut le retirer.', 'Only the person who uploaded this file can remove it.') : erreur('reseau')); return; }
       miens = miens.filter((x) => x !== id); mem.set(CLE_MIENS, JSON.stringify(miens));
       docs = docs.filter((x) => x.id !== id); rendreSiOuvert();
