@@ -17,6 +17,8 @@
 //   (il est mis à la corbeille du Drive, récupérable 30 jours).
 // Pour changer le code : remplacer « docs_code » par l'empreinte SHA-256 du nouveau code (en minuscules).
 // Pour retirer un document à la main : le supprimer directement dans le dossier Drive.
+// Limites : 20 Mo par fichier, 300 fichiers et 2 Go au total. Pas de macros (.xlsm) ni d'archives (.zip, .rar, .7z).
+// Accès Drive limité aux fichiers créés par ce script (autorisation « drive.file », voir appsscript.json).
 const PREFIXE = 'p_';
 const MAX_OUVERTS = 30;          // sondages ouverts en même temps, au total
 const MAX_PAR_PERSONNE = 5;      // sondages ouverts par appareil
@@ -25,9 +27,10 @@ const MAX_CREATIONS_HEURE = 5;   // créations par appareil et par heure
 const DOCS_DOSSIER = 'Planning Cnam – Documents de la promo';
 const DOCS_MAX_OCTETS = 20 * 1024 * 1024;   // 20 Mo par fichier
 const DOCS_MAX_FICHIERS = 300;              // fichiers dans le dossier, au total
+const DOCS_MAX_TOTAL = 2 * 1024 * 1024 * 1024; // 2 Go au total dans le dossier
 const DOCS_MAX_HEURE = 15;                  // dépôts par appareil et par heure
-const DOCS_EXT = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'xlsm', 'ppt', 'pptx', 'odt', 'ods', 'odp', 'rtf', 'txt', 'csv', 'md',
-  'png', 'jpg', 'jpeg', 'gif', 'webp', 'heic', 'zip', '7z', 'rar', 'py', 'm', 'ipynb', 'mat', 'dwg', 'dxf', 'step', 'stp'];
+const DOCS_EXT = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'odt', 'ods', 'odp', 'rtf', 'txt', 'csv', 'md',
+  'png', 'jpg', 'jpeg', 'gif', 'webp', 'heic', 'py', 'm', 'ipynb', 'mat', 'dwg', 'dxf', 'step', 'stp'];
 
 function doGet(e) {
   if (e && e.parameter && e.parameter.docs) return repondre(listerDocs());
@@ -126,32 +129,46 @@ function supprimer(d) {
 }
 
 // ---------------------------------------------------------------- documents de la promo
+// Service avancé « Drive » (API v3) : il fonctionne avec l'accès limité « drive.file »,
+// c'est-à-dire aux seuls fichiers et dossiers créés par ce script.
 function dossierDocs() {
   const props = PropertiesService.getScriptProperties();
   const id = props.getProperty('docs_dossier');
   if (id) {
-    try { const f = DriveApp.getFolderById(id); if (!f.isTrashed()) return f; } catch (err) { }  // dossier introuvable : recréé plus bas
+    try { const f = Drive.Files.get(id, { fields: 'id,trashed' }); if (!f.trashed) return f.id; } catch (err) { }  // dossier introuvable : recréé plus bas
   }
-  const dossier = DriveApp.createFolder(DOCS_DOSSIER);
-  props.setProperty('docs_dossier', dossier.getId());
-  return dossier;
+  const dossier = Drive.Files.create({ name: DOCS_DOSSIER, mimeType: 'application/vnd.google-apps.folder' }, null, { fields: 'id' });
+  props.setProperty('docs_dossier', dossier.id);
+  return dossier.id;
 }
 
-function metaDoc(f) {
-  try { return JSON.parse(f.getDescription() || '{}') || {}; } catch (err) { return {}; }
+function metaDoc(description) {
+  try { return JSON.parse(description || '{}') || {}; } catch (err) { return {}; }
+}
+
+// tous les fichiers (non supprimés) du dossier
+function fichiersDocs(dossierId) {
+  const liste = [];
+  let page;
+  do {
+    const r = Drive.Files.list({
+      q: "'" + dossierId + "' in parents and trashed = false",
+      fields: 'nextPageToken,files(id,name,size,mimeType,createdTime,description,webViewLink)',
+      pageSize: 1000, pageToken: page,
+    });
+    (r.files || []).forEach(function (f) { liste.push(f); });
+    page = r.nextPageToken;
+  } while (page);
+  return liste;
 }
 
 function listerDocs() {
-  const it = dossierDocs().getFiles();
-  const liste = [];
-  while (it.hasNext()) {
-    const f = it.next();
-    if (f.isTrashed()) continue;
-    liste.push({
-      id: f.getId(), nom: f.getName(), taille: f.getSize(), type: f.getMimeType(),
-      date: f.getDateCreated().toISOString(), auteur: metaDoc(f).auteur || '', lien: f.getUrl(),
-    });
-  }
+  const liste = fichiersDocs(dossierDocs()).map(function (f) {
+    return {
+      id: f.id, nom: f.name, taille: Number(f.size) || 0, type: f.mimeType,
+      date: f.createdTime, auteur: metaDoc(f.description).auteur || '', lien: f.webViewLink,
+    };
+  });
   liste.sort(function (a, b) { return b.date.localeCompare(a.date); });
   const actif = !!PropertiesService.getScriptProperties().getProperty('docs_code');
   return { ok: true, actif: actif, max: DOCS_MAX_OCTETS, documents: liste };
@@ -173,11 +190,11 @@ function deposer(d) {
   const cache = CacheService.getScriptCache(), cleCache = 'd_' + h.slice(0, 24);
   const n = Number(cache.get(cleCache) || 0);
   if (n >= DOCS_MAX_HEURE) return { ok: false, erreur: 'vite' };
-  const dossier = dossierDocs();
-  let total = 0;
-  const it = dossier.getFiles();
-  while (it.hasNext() && total < DOCS_MAX_FICHIERS) { it.next(); total++; }
-  if (total >= DOCS_MAX_FICHIERS) return { ok: false, erreur: 'plein' };
+  const dossierId = dossierDocs();
+  const existants = fichiersDocs(dossierId);
+  const octetsTotal = existants.reduce(function (s, f) { return s + (Number(f.size) || 0); }, 0);
+  const estimation = Math.floor(b64.length * 3 / 4);
+  if (existants.length >= DOCS_MAX_FICHIERS || octetsTotal + estimation > DOCS_MAX_TOTAL) return { ok: false, erreur: 'plein' };
 
   let octets;
   try { octets = Utilities.base64Decode(b64); } catch (err) { return { ok: false, erreur: 'fichier' }; }
@@ -185,30 +202,29 @@ function deposer(d) {
   cache.put(cleCache, String(n + 1), 3600);
 
   const type = texte(d.type, 100) || 'application/octet-stream';
-  const f = dossier.createFile(Utilities.newBlob(octets, type, nom));
-  f.setDescription(JSON.stringify({ proprio: h, auteur: texte(d.auteur, 30) }));
-  f.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-  return { ok: true, id: f.getId() };
+  const f = Drive.Files.create({
+    name: nom, parents: [dossierId], mimeType: type,
+    description: JSON.stringify({ proprio: h, auteur: texte(d.auteur, 30) }),
+  }, Utilities.newBlob(octets, type, nom), { fields: 'id' });
+  Drive.Permissions.create({ role: 'reader', type: 'anyone' }, f.id);
+  return { ok: true, id: f.id };
 }
 
 function retirer(d) {
   const id = texte(d.id, 80);
   let f;
-  try { f = DriveApp.getFileById(id); } catch (err) { return { ok: true, deja: true }; }
-  if (f.isTrashed()) return { ok: true, deja: true };
+  try { f = Drive.Files.get(id, { fields: 'id,trashed,parents,description' }); } catch (err) { return { ok: true, deja: true }; }
+  if (f.trashed) return { ok: true, deja: true };
   const dossierId = PropertiesService.getScriptProperties().getProperty('docs_dossier');
-  let dedans = false;
-  const parents = f.getParents();
-  while (parents.hasNext()) if (parents.next().getId() === dossierId) dedans = true;
-  if (!dedans) return { ok: false, erreur: 'interdit' };
-  const meta = metaDoc(f);
+  if ((f.parents || []).indexOf(dossierId) < 0) return { ok: false, erreur: 'interdit' };
+  const meta = metaDoc(f.description);
   if (!meta.proprio || empreinte(String(d.cle || '')) !== meta.proprio) return { ok: false, erreur: 'interdit' };
-  f.setTrashed(true);
+  Drive.Files.update({ trashed: true }, id);
   return { ok: true };
 }
 
 // À lancer une fois depuis l'éditeur (bouton « Exécuter ») : crée le dossier et demande l'autorisation Drive.
 function preparerDocuments() {
-  const dossier = dossierDocs();
-  Logger.log('Dossier des documents : ' + dossier.getUrl());
+  const id = dossierDocs();
+  Logger.log('Dossier des documents : https://drive.google.com/drive/folders/' + id);
 }
